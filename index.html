@@ -41,7 +41,7 @@
   .folder.pulse { animation:fpulse .45s ease; }
   @keyframes fpulse { 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.15) drop-shadow(0 4px 8px rgba(0,0,0,.18))} }
 
-  .captcha-wrapper { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:100; }
+  .captcha-wrapper { position:absolute; top:calc(40% - 172px); left:calc(50% - 172px); z-index:100; }
   .captcha-box { width:344px; background:#fff; border:1px solid #c0c0c0; border-radius:3px; box-shadow:5px 5px 0 rgba(0,0,0,.13),10px 10px 0 rgba(0,0,0,.06); overflow:hidden; }
   .cap-header { background:#4285f4; padding:14px 18px 12px; }
   .cap-header .sub { font-size:11px; color:rgba(255,255,255,.8); margin-bottom:4px; letter-spacing:.03em; }
@@ -765,6 +765,10 @@ function toggleSpotify() {
   // folders (absolute inside .desktop)
   document.querySelectorAll('.folder').forEach(f => makeDraggable(f, true));
 
+// captcha wrapper (absolute inside .desktop)
+const captcha = document.querySelector('.captcha-wrapper');
+if(captcha) makeDraggable(captcha, true);
+
   // spotify widget (fixed)
   const spotify = document.querySelector('.spotify-widget');
   if(spotify) makeDraggable(spotify, false);
@@ -807,6 +811,9 @@ function toggleSpotify() {
       if(didDrag) { e.stopImmediatePropagation(); }
     }, true);
   });
+
+  const cw = document.querySelector('.captcha-wrapper');
+if(cw) cw.addEventListener('click', e => { if(didDrag) e.stopImmediatePropagation(); }, true);
 
 })();
 </script>
@@ -927,6 +934,8 @@ const NAME_TILES = [
   });
 })();
 </script>
-
+ <div style="position:fixed; top:42px; left:50%; transform:translateX(-50%); z-index:200; font-family:'Space Mono',monospace; font-size:11px; color:#1e1e1e; letter-spacing:.03em; pointer-events:none; background:#F5C842; padding:6px 14px; border-radius:2px; box-shadow:2px 2px 0 rgba(0,0,0,.15); font-weight:700;">
+  psst - try moving the icons and letters 👀
+</div>
 </body>
 </html>
