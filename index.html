@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tanishk — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #e8e4dc; --dark: #1e1e1e; --dark2: #2a2a2a;
+    --blue: #4285f4; --blue2: #1a73e8; --surface: #fafaf8;
+    --text: #1e1e1e; --muted: rgba(30,30,30,0.5);
+  }
+  html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); font-family:'Space Mono',monospace; color:var(--text); user-select:none; }
+
+  .scanlines { position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.018) 2px,rgba(0,0,0,0.018) 4px); pointer-events:none; z-index:9000; }
+
+  .taskbar { position:fixed; top:0; left:0; right:0; height:30px; background:var(--dark2); display:flex; align-items:center; justify-content:space-between; padding:0 18px; z-index:500; }
+  .taskbar-brand { font-family:'Syne',sans-serif; font-weight:800; font-size:12px; color:#f0ebe0; letter-spacing:.08em; text-transform:uppercase; }
+  .taskbar-menu { display:flex; gap:20px; }
+  .taskbar-menu span { font-size:11px; color:rgba(240,235,224,.45); cursor:pointer; letter-spacing:.03em; transition:color .15s; }
+  .taskbar-menu span:hover { color:#f0ebe0; }
+  .taskbar-right { font-size:11px; color:rgba(240,235,224,.45); }
+
+  .desktop {
+    position:fixed; inset:0; padding-top:30px; padding-bottom:60px;
+    background-image: url('wallpaper.jpeg'); 
+    background-size: cover;
+    background-position: center;
+  }
+
+  .folder { position:absolute; display:flex; flex-direction:column; align-items:center; gap:5px; cursor:grab; padding:8px; border-radius:6px; width:84px; transition:background .18s,box-shadow .18s; transform-origin:center center; }
+  .folder.dragging { cursor:grabbing; opacity:.85; box-shadow:6px 6px 0 rgba(0,0,0,.2); transition:none; z-index:400; }
+  .folder:hover { background:rgba(0,0,0,.08); filter:brightness(1.05); }
+  .folder:active { opacity:.85; }
+  .folder svg { width:56px; height:48px; display:block; }
+  .folder-label { font-size:11px; font-weight:700; color:var(--text); text-align:center; line-height:1.3; text-shadow:0 1px 3px rgba(232,228,220,.9); }
+  .folder-sub { font-size:10px; color:var(--muted); text-align:center; margin-top:-2px; }
+  .folder.pulse { animation:fpulse .45s ease; }
+  @keyframes fpulse { 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.15) drop-shadow(0 4px 8px rgba(0,0,0,.18))} }
+
+  .captcha-wrapper { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:100; }
+  .captcha-box { width:344px; background:#fff; border:1px solid #c0c0c0; border-radius:3px; box-shadow:5px 5px 0 rgba(0,0,0,.13),10px 10px 0 rgba(0,0,0,.06); overflow:hidden; }
+  .cap-header { background:#4285f4; padding:14px 18px 12px; }
+  .cap-header .sub { font-size:11px; color:rgba(255,255,255,.8); margin-bottom:4px; letter-spacing:.03em; }
+  .cap-header h2 { font-family:'Syne',sans-serif; font-size:18px; font-weight:800; color:#fff; }
+  .cap-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; padding:2px; background:#c5c5c5; }
+  .cap-cell { position:relative; aspect-ratio:1; background:#f0f0f0; cursor:pointer; overflow:hidden; }
+  .cap-cell:hover { opacity:.88; }
+  .cell-inner { width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; }
+  .cell-inner img { width:100%; height:100%; object-fit:cover; position:absolute; inset:0; }
+  .cell-inner .cell-label { position:relative; z-index:1; font-size:9px; letter-spacing:.06em; font-family:'Space Mono',monospace; font-weight:700; text-transform:uppercase; text-align:center; padding:2px 4px; background:rgba(0,0,0,.45); color:#fff; border-radius:2px; }
+  .cell-inner .cell-emoji { font-size:28px; line-height:1; position:relative; z-index:1; }
+  .cap-cell.selected::after { content:''; position:absolute; inset:0; background:rgba(66,133,244,.32); border:3px solid #4285f4; z-index:2; }
+  .cap-cell.selected .chk { display:flex; }
+  .chk { display:none; position:absolute; bottom:7px; right:7px; width:22px; height:22px; background:#4285f4; border-radius:50%; align-items:center; justify-content:center; z-index:3; }
+  .chk svg { width:13px; height:13px; }
+  .cap-footer { padding:10px 12px; background:#f7f7f7; border-top:1px solid #e0e0e0; display:flex; align-items:center; justify-content:space-between; }
+  .cap-icons { display:flex; gap:4px; }
+  .cap-ico { width:30px; height:30px; cursor:pointer; color:#777; display:flex; align-items:center; justify-content:center; border-radius:50%; transition:background .15s; }
+  .cap-ico:hover { background:#eee; }
+  .cap-ico svg { width:17px; height:17px; }
+  .cap-right { display:flex; align-items:center; gap:10px; }
+  .cap-brand .b1 { font-size:9px; color:#aaa; display:block; font-family:'Space Mono',monospace; }
+  .cap-brand .b2 { font-size:11px; font-weight:700; color:#555; display:block; font-family:'Space Mono',monospace; }
+  .verify-btn { background:#4285f4; color:#fff; border:none; padding:9px 20px; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; border-radius:2px; transition:background .15s,transform .1s; }
+  .verify-btn:hover { background:#1a73e8; }
+  .verify-btn.err { background:#e24b4a; }
+
+  .hint { position:fixed; bottom:72px; left:50%; transform:translateX(-50%); font-size:10px; color:var(--muted); letter-spacing:.04em; pointer-events:none; z-index:200; white-space:nowrap; }
+
+  .dock { position:fixed; bottom:0; left:0; right:0; height:58px; background:rgba(30,30,30,.93); border-top:1px solid rgba(255,255,255,.07); display:flex; align-items:center; justify-content:center; gap:4px; z-index:500; }
+  .dock-item { width:46px; height:46px; display:flex; align-items:center; justify-content:center; border-radius:10px; cursor:pointer; font-size:22px; position:relative; transition:transform .15s,background .15s; }
+  .dock-item:hover { transform:scale(1.25) translateY(-5px); background:rgba(255,255,255,.1); }
+  .dock-tip { position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:rgba(0,0,0,.8); color:#fff; font-size:10px; padding:3px 8px; border-radius:4px; white-space:nowrap; opacity:0; pointer-events:none; font-family:'Space Mono',monospace; transition:opacity .15s; }
+  .dock-item:hover .dock-tip { opacity:1; }
+
+  .overlay { position:fixed; inset:0; background:rgba(0,0,0,.52); z-index:700; display:none; align-items:center; justify-content:center; }
+  .overlay.open { display:flex; }
+
+  .modal { background:var(--surface); border:1px solid #bbb; border-radius:4px; box-shadow:7px 7px 0 rgba(0,0,0,.18); overflow:hidden; }
+  .modal-bar { background:var(--dark2); padding:9px 14px; display:flex; align-items:center; justify-content:space-between; }
+  .modal-bar-title { font-family:'Syne',sans-serif; font-size:12px; font-weight:700; color:#f0ebe0; letter-spacing:.07em; text-transform:uppercase; }
+  .modal-x { width:16px; height:16px; background:#ff5f57; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:#8b0000; transition:opacity .15s; flex-shrink:0; }
+  .modal-x:hover { opacity:.75; }
+
+  .folder-modal { width:440px; }
+  .folder-modal .modal-body { padding:26px; }
+  .modal-body h3 { font-family:'Syne',sans-serif; font-size:22px; font-weight:800; letter-spacing:-.02em; margin-bottom:12px; }
+  .modal-body p { font-size:12px; line-height:1.85; color:#444; margin-bottom:14px; }
+  .tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:18px; }
+  .tag { background:var(--dark2); color:#e8e4dc; font-size:10px; padding:3px 10px; border-radius:2px; font-weight:700; letter-spacing:.04em; }
+  .modal-action { background:var(--blue); color:#fff; border:none; padding:10px 20px; cursor:pointer; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; letter-spacing:.06em; text-transform:uppercase; border-radius:2px; transition:background .15s; margin-right:8px; margin-bottom:6px; }
+  .modal-action:hover { background:var(--blue2); }
+
+  .projects-modal { width:480px; }
+  .projects-modal .modal-body { padding:0; }
+  .file-list { list-style:none; }
+  .file-item { display:flex; align-items:center; gap:12px; padding:11px 20px; border-bottom:1px solid #ebebeb; cursor:pointer; transition:background .12s; }
+  .file-item:last-child { border-bottom:none; }
+  .file-item:hover { background:#f5f3ef; }
+  .file-icon { font-size:18px; flex-shrink:0; }
+  .file-name { font-size:12px; font-weight:700; color:var(--text); flex:1; }
+  .file-lang { font-size:10px; color:var(--muted); background:#ebebeb; padding:2px 7px; border-radius:2px; }
+  .file-arrow { font-size:11px; color:var(--muted); }
+
+  .proj-dialog { width:420px; }
+  .proj-dialog .modal-body { padding:24px; }
+  .proj-dialog h3 { font-family:'Syne',sans-serif; font-size:19px; font-weight:800; letter-spacing:-.01em; margin-bottom:10px; }
+  .proj-dialog p { font-size:12px; line-height:1.85; color:#444; margin-bottom:16px; }
+  .proj-dialog .proj-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:18px; }
+  .proj-dialog .proj-tag { background:#f0ede8; color:var(--text); font-size:10px; padding:3px 9px; border-radius:2px; font-weight:700; letter-spacing:.03em; }
+  .github-btn { display:inline-flex; align-items:center; gap:8px; background:#1e1e1e; color:#fff; border:none; padding:10px 18px; cursor:pointer; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; letter-spacing:.05em; text-transform:uppercase; border-radius:2px; transition:background .15s; text-decoration:none; }
+  .github-btn:hover { background:#3a3a3a; }
+  .github-btn svg { width:18px; height:18px; fill:#fff; }
+
+  .contact-links { display:flex; flex-direction:column; gap:10px; margin-top:4px; }
+  .contact-link { display:flex; align-items:center; gap:12px; padding:10px 14px; border:1px solid #e0e0e0; border-radius:3px; cursor:pointer; text-decoration:none; color:var(--text); transition:background .12s,border-color .12s; }
+  .contact-link:hover { background:#f5f3ef; border-color:#bbb; }
+  .contact-link-icon { width:32px; height:32px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+  .contact-link-text { flex:1; }
+  .contact-link-text .cl-name { font-size:12px; font-weight:700; }
+  .contact-link-text .cl-val { font-size:11px; color:var(--muted); }
+  .contact-link-arrow { font-size:12px; color:var(--muted); }
+
+  /* FACT DIALOG */
+  .fact-overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:800; display:none; align-items:center; justify-content:center; }
+  .fact-overlay.open { display:flex; }
+  .fact-box { width:400px; background:var(--surface); border:1px solid #bbb; border-radius:4px; box-shadow:6px 6px 0 rgba(0,0,0,.2); overflow:hidden; animation:fact-pop .22s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes fact-pop { from{transform:scale(.85);opacity:0} to{transform:scale(1);opacity:1} }
+  .fact-bar { background:var(--dark2); padding:9px 14px; display:flex; align-items:center; justify-content:space-between; }
+  .fact-bar-title { font-family:'Syne',sans-serif; font-size:11px; font-weight:700; color:#f0ebe0; letter-spacing:.08em; text-transform:uppercase; }
+  .fact-badge { font-size:10px; padding:2px 9px; border-radius:2px; font-family:'Space Mono',monospace; font-weight:700; letter-spacing:.04em; }
+  .fact-badge.fact { background:#4285f4; color:#fff; }
+  .fact-badge.task { background:#e07b4a; color:#fff; }
+  .fact-body { padding:28px 26px 24px; }
+  .fact-emoji { font-size:38px; display:block; margin-bottom:14px; }
+  .fact-text { font-family:'Syne',sans-serif; font-size:16px; font-weight:700; line-height:1.55; color:var(--text); margin-bottom:22px; letter-spacing:-.01em; }
+  .fact-footer { display:flex; align-items:center; justify-content:space-between; }
+  .fact-counter { font-size:10px; color:var(--muted); letter-spacing:.04em; font-family:'Space Mono',monospace; }
+  .fact-btn { background:var(--dark2); color:#f0ebe0; border:none; padding:10px 22px; cursor:pointer; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; letter-spacing:.06em; text-transform:uppercase; border-radius:2px; transition:background .15s; }
+  .fact-btn:hover { background:#3a3a3a; }
+
+  .splash {
+    position:fixed; inset:0;
+    background:var(--dark2);
+    background-image: url('splash.jpeg'); 
+    background-size: cover;
+    background-position: center;
+    z-index:900; display:none;
+    flex-direction:column; align-items:center; justify-content:center; gap:14px;
+  }
+  .splash::before {
+    content:''; position:absolute; inset:0;
+    background: rgba(0,0,0,0.6); 
+  }
+  .splash.show { display:flex; }
+  .splash > * { position:relative; z-index:1; }
+  .splash-big { font-family:'Syne',sans-serif; font-size:54px; font-weight:800; color:#f0ebe0; letter-spacing:-.03em; }
+  .splash-enter { margin-top:20px; background:var(--blue); color:#fff; border:none; padding:13px 32px; cursor:pointer; font-family:'Syne',sans-serif; font-weight:700; font-size:13px; letter-spacing:.07em; text-transform:uppercase; border-radius:2px; transition:background .15s; }
+  .splash-enter:hover { background:var(--blue2); }
+
+  /* SPOTIFY WIDGET */
+  .spotify-widget {
+    position: fixed;
+    bottom: 66px;
+    right: 14px;
+    z-index: 600;
+    font-family: 'Space Mono', monospace;
+    width: 260px;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 4px 4px 0 rgba(0,0,0,.18), 8px 8px 0 rgba(0,0,0,.08);
+    border: 1px solid rgba(0,0,0,.15);
+  }
+  .spotify-bar {
+    background: #1DB954;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+  .spotify-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .spotify-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .spotify-icon svg {
+    width: 16px; height: 16px; fill: #fff;
+  }
+  .spotify-bar-title {
+    font-size: 10px;
+    color: #fff;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+  }
+  .spotify-winbtns {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .spotify-winbtn {
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: opacity .15s;
+  }
+  .spotify-winbtn:hover { opacity: .75; }
+  .spotify-winbtn.close  { background: #ff5f57; }
+  .spotify-winbtn.min    { background: #febc2e; }
+  .spotify-winbtn.expand { background: #28c840; }
+  .spotify-embed {
+    width: 100%;
+    overflow: hidden;
+    transition: height .3s cubic-bezier(.4,0,.2,1);
+    height: 152px;
+  }
+  .spotify-embed.collapsed { height: 0; }
+  .spotify-embed iframe {
+    display: block;
+    width: 100%;
+    height: 152px;
+    border: none;
+  }
+
+  /* FULL BIO DIALOG */
+  .bio-modal { width: 480px; }
+  .bio-modal .modal-body { padding: 24px; }
+  .bio-top { display:flex; align-items:flex-start; gap:18px; margin-bottom:18px; }
+  .bio-photo { width:72px; height:72px; border-radius:4px; object-fit:cover; flex-shrink:0; background:#e0ddd6; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; font-size:28px; }
+  .bio-photo img { width:100%; height:100%; object-fit:cover; border-radius:4px; }
+  .bio-name { font-family:'Syne',sans-serif; font-size:20px; font-weight:800; letter-spacing:-.02em; margin-bottom:6px; }
+  .bio-tagline { font-size:11px; color:var(--muted); letter-spacing:.03em; }
+  .bio-body p { font-size:12px; line-height:1.85; color:#444; margin-bottom:12px; }
+  .bio-links { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
+  .bio-link { display:inline-flex; align-items:center; gap:6px; background:#f0ede8; color:var(--text); font-size:10px; font-weight:700; padding:6px 12px; border-radius:2px; text-decoration:none; letter-spacing:.04em; transition:background .12s; }
+  .bio-link:hover { background:#e0ddd6; }
+  .bio-link svg { width:14px; height:14px; fill:var(--text); }
+
+  /* NAME TILES */
+  .name-tile {
+    position: fixed;
+    width: 52px;
+    height: 52px;
+    cursor: grab;
+    z-index: 300;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 3px 3px 0 rgba(0,0,0,.18);
+    border: 1.5px solid rgba(0,0,0,.15);
+    user-select: none;
+  }
+  .name-tile.dragging { cursor: grabbing; box-shadow: 6px 6px 0 rgba(0,0,0,.25); z-index:450; transition:none; }
+  .name-tile img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+  .name-tile .tile-letter {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0,0,0,.7);
+    pointer-events: none;
+    letter-spacing: -.01em;
+  }
+  .name-tile .tile-bg {
+    width: 100%; height: 100%;
+    background: var(--dark2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: rgba(240,235,224,.35);
+  }
+</style>
+</head>
+<body>
+<div class="scanlines"></div>
+
+<div class="taskbar">
+  <div style="display:flex;align-items:center;gap:24px;">
+    <span class="taskbar-brand">Tanishk.dev</span>
+    <div class="taskbar-menu">
+      <span onclick="openAbout()">About</span>
+      <span onclick="openProjects()">Projects</span>
+      <span onclick="openResume()">Resume</span>
+      <span onclick="openContact()">Contact</span>
+    </div>
+  </div>
+  <div class="taskbar-right" id="clock"></div>
+</div>
+
+<div class="desktop">
+
+  
+  <div class="folder" style="top:15%; left:30%" onclick="openAbout()">
+    <svg viewBox="0 0 56 48" fill="none"><rect x="0" y="10" width="56" height="36" rx="3" fill="#F5C842"/><path d="M0 15C0 12.2 2.2 10 5 10H22L27 5H52C54.8 5 56 7.2 56 10V15H0Z" fill="#E0AD00"/><rect x="16" y="21" width="24" height="2.5" rx="1.2" fill="white" opacity=".6"/><rect x="16" y="27" width="18" height="2" rx="1" fill="white" opacity=".4"/><rect x="16" y="32" width="20" height="2" rx="1" fill="white" opacity=".4"/></svg>
+    <span class="folder-label">About Me</span><span class="folder-sub">who_am_i.txt</span>
+  </div>
+
+  <div class="folder" style="top:38%; left:25%" onclick="openEducation()">
+    <svg viewBox="0 0 56 48" fill="none"><rect x="0" y="10" width="56" height="36" rx="3" fill="#8fbdd3"/><path d="M0 15C0 12.2 2.2 10 5 10H22L27 5H52C54.8 5 56 7.2 56 10V15H0Z" fill="#6a9ab5"/><text x="28" y="34" text-anchor="middle" fill="white" font-size="11" opacity=".75" font-family="monospace">INFO</text></svg>
+    <span class="folder-label">Education</span><span class="folder-sub">degrees.txt</span>
+  </div>
+
+  <div class="folder" style="top:17%; right:30%" onclick="openProjects()">
+    <svg viewBox="0 0 56 48" fill="none"><rect x="0" y="10" width="56" height="36" rx="3" fill="#5B9BD5"/><path d="M0 15C0 12.2 2.2 10 5 10H22L27 5H52C54.8 5 56 7.2 56 10V15H0Z" fill="#3A7AB8"/><text x="28" y="36" text-anchor="middle" fill="white" font-size="15" opacity=".75" font-family="monospace">{…}</text></svg>
+    <span class="folder-label">Projects</span><span class="folder-sub">3 items</span>
+  </div>
+
+  <div class="folder" style="top:38%; left:70%" onclick="openResume()">
+    <svg viewBox="0 0 56 48" fill="none"><rect x="0" y="10" width="56" height="36" rx="3" fill="#68C068"/><path d="M0 15C0 12.2 2.2 10 5 10H22L27 5H52C54.8 5 56 7.2 56 10V15H0Z" fill="#4EA04E"/><rect x="16" y="21" width="24" height="2.5" rx="1.2" fill="white" opacity=".65"/><rect x="16" y="27" width="16" height="2" rx="1" fill="white" opacity=".45"/><rect x="16" y="32" width="20" height="2" rx="1" fill="white" opacity=".45"/></svg>
+    <span class="folder-label">Resume</span><span class="folder-sub">CV_2024.pdf</span>
+  </div>
+
+  <div class="folder" style="top:67%; right:25%" onclick="openSkills()">
+    <svg viewBox="0 0 56 48" fill="none"><rect x="0" y="10" width="56" height="36" rx="3" fill="#B07ED6"/><path d="M0 15C0 12.2 2.2 10 5 10H22L27 5H52C54.8 5 56 7.2 56 10V15H0Z" fill="#9060BE"/><text x="28" y="36" text-anchor="middle" fill="white" font-size="14" opacity=".8" font-family="monospace">&lt;/&gt;</text></svg>
+    <span class="folder-label">Skills</span><span class="folder-sub">stack.json</span>
+  </div>
+
+  <div class="folder" style="bottom:18%; left:27%" onclick="openContact()">
+    <svg viewBox="0 0 56 48" fill="none"><rect x="0" y="10" width="56" height="36" rx="3" fill="#D97060"/><path d="M0 15C0 12.2 2.2 10 5 10H22L27 5H52C54.8 5 56 7.2 56 10V15H0Z" fill="#BE5040"/><text x="28" y="36" text-anchor="middle" fill="white" font-size="16" opacity=".8" font-family="monospace">@</text></svg>
+    <span class="folder-label">Contact</span><span class="folder-sub">reach_me.lnk</span>
+  </div>
+
+  <!-- CAPTCHA -->
+  <div class="captcha-wrapper">
+    <div class="captcha-box">
+      <div class="cap-header">
+        <p class="sub">Select all images that</p>
+        <h2>who is the DEVELOPER?</h2>
+      </div>
+      <div class="cap-grid" id="cap-grid"></div>
+      <div class="cap-footer">
+        <div class="cap-icons">
+          <div class="cap-ico" onclick="buildGrid()" title="Refresh">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+          </div>
+          <div class="cap-ico" title="Audio">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+          </div>
+          <div class="cap-ico" title="Help">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-linecap="round" stroke-width="3"/></svg>
+          </div>
+        </div>
+        <div class="cap-right">
+          <div class="cap-brand"><span class="b1">reCAPTCHA</span><span class="b2">FOLIO</span></div>
+          <button class="verify-btn" id="verify-btn" onclick="verify()">VERIFY</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="hint" id="hint">click folders to explore · select dev images · verify to enter</div>
+
+<div class="dock">
+  <div class="dock-item" onclick="openAbout()">👤<div class="dock-tip">About</div></div>
+  <div class="dock-item" onclick="openProjects()">🗂️<div class="dock-tip">Projects</div></div>
+  <div class="dock-item" onclick="openResume()">📄<div class="dock-tip">Resume</div></div>
+  <div class="dock-item" onclick="openSkills()">⚙️<div class="dock-tip">Skills</div></div>
+  <div class="dock-item" onclick="openContact()">✉️<div class="dock-tip">Contact</div></div>
+  <div class="dock-item" onclick="openBlog()">✏️<div class="dock-tip">Blog</div></div>
+</div>
+
+<!-- GENERIC FOLDER OVERLAY -->
+<div class="overlay" id="folder-overlay" onclick="closeOverlay('folder-overlay',event)">
+  <div class="modal folder-modal" onclick="event.stopPropagation()">
+    <div class="modal-bar">
+      <span class="modal-bar-title" id="fm-title"></span>
+      <div class="modal-x" onclick="closeOverlay('folder-overlay')">✕</div>
+    </div>
+    <div class="modal-body">
+      <h3 id="fm-h"></h3>
+      <p id="fm-p"></p>
+      <div class="tags" id="fm-tags"></div>
+      <div id="fm-actions"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS LIST OVERLAY -->
+<div class="overlay" id="projects-overlay" onclick="closeOverlay('projects-overlay',event)">
+  <div class="modal projects-modal" onclick="event.stopPropagation()">
+    <div class="modal-bar">
+      <span class="modal-bar-title">Projects</span>
+      <div class="modal-x" onclick="closeOverlay('projects-overlay')">✕</div>
+    </div>
+    <div class="modal-body">
+      <ul class="file-list" id="file-list"></ul>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECT DETAIL OVERLAY -->
+<div class="overlay" id="proj-detail-overlay" onclick="closeOverlay('proj-detail-overlay',event)">
+  <div class="modal proj-dialog" onclick="event.stopPropagation()">
+    <div class="modal-bar">
+      <span class="modal-bar-title" id="pd-title"></span>
+      <div class="modal-x" onclick="closeOverlay('proj-detail-overlay')">✕</div>
+    </div>
+    <div class="modal-body">
+      <h3 id="pd-name"></h3>
+      <p id="pd-desc"></p>
+      <div class="proj-tags" id="pd-tags"></div>
+      <a class="github-btn" id="pd-ghbtn" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.005 2.04.138 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        View on GitHub
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT OVERLAY -->
+<div class="overlay" id="contact-overlay" onclick="closeOverlay('contact-overlay',event)">
+  <div class="modal folder-modal" onclick="event.stopPropagation()">
+    <div class="modal-bar">
+      <span class="modal-bar-title">Contact</span>
+      <div class="modal-x" onclick="closeOverlay('contact-overlay')">✕</div>
+    </div>
+    <div class="modal-body">
+      <h3>Let's talk.</h3>
+      <p>Open to opportunities, collabs, and conversations. Based in Raipur, CG. Pick a channel below.</p>
+      <div class="contact-links">
+        <a class="contact-link" href="https://github.com/ADD_YOUR_USERNAME" target="_blank" rel="noopener">
+          <div class="contact-link-icon" style="background:#1e1e1e"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.005 2.04.138 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg></div>
+          <div class="contact-link-text"><div class="cl-name">GitHub</div><div class="cl-val">github.com/ADD_YOUR_USERNAME</div></div>
+          <span class="contact-link-arrow">↗</span>
+        </a>
+        <a class="contact-link" href="https://linkedin.com/in/ADD_YOUR_USERNAME" target="_blank" rel="noopener">
+          <div class="contact-link-icon" style="background:#0a66c2"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46C23.21 24 24 23.23 24 22.28V1.72C24 .77 23.21 0 22.23 0z"/></svg></div>
+          <div class="contact-link-text"><div class="cl-name">LinkedIn</div><div class="cl-val">linkedin.com/in/ADD_YOUR_USERNAME</div></div>
+          <span class="contact-link-arrow">↗</span>
+        </a>
+        <a class="contact-link" href="mailto:ADD_YOUR_EMAIL@gmail.com">
+          <div class="contact-link-icon" style="background:#ea4335"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+          <div class="contact-link-text"><div class="cl-name">Email</div><div class="cl-val">ADD_YOUR_EMAIL@gmail.com</div></div>
+          <span class="contact-link-arrow">↗</span>
+        </a>
+        <a class="contact-link" href="https://twitter.com/ADD_YOUR_USERNAME" target="_blank" rel="noopener">
+          <div class="contact-link-icon" style="background:#000"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+          <div class="contact-link-text"><div class="cl-name">Twitter / X</div><div class="cl-val">@ADD_YOUR_USERNAME</div></div>
+          <span class="contact-link-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FACT DIALOG -->
+<div class="fact-overlay" id="fact-overlay">
+  <div class="fact-box">
+    <div class="fact-bar">
+      <span class="fact-bar-title" id="fact-title"></span>
+      <span class="fact-badge" id="fact-badge"></span>
+    </div>
+    <div class="fact-body">
+      <span class="fact-emoji" id="fact-emoji"></span>
+      <div class="fact-text" id="fact-text"></div>
+      <div class="fact-footer">
+        <span class="fact-counter" id="fact-counter"></span>
+        <button class="fact-btn" onclick="closeFact()">GOT IT →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VERIFIED SPLASH -->
+<div class="splash" id="splash">
+  <div class="splash-big">VERIFIED ✓</div>
+  <div style="font-size:12px;color:rgba(240,235,224,.45);letter-spacing:.06em;font-family:'Space Mono',monospace;">// human confirmed. welcome to the portfolio.</div>
+  <button class="splash-enter" onclick="enterSite()">ENTER PORTFOLIO →</button>
+</div>
+
+<script>
+const CELLS = [
+  { image: "captcha/img1.jpeg",  emoji: "💻", label: "code editor",    ok: true  },
+  { image: "captcha/img2.jpeg",  emoji: "⚡", label: "my project",     ok: true  },
+  { image: "captcha/img3.jpeg",  emoji: "🐱", label: "not dev stuff",  ok: false },
+  { image: "captcha/img4.jpeg",  emoji: "⬛", label: "terminal",       ok: true  },
+  { image: "captcha/img5.jpeg",  emoji: "😂", label: "meme",           ok: false },
+  { image: "captcha/img6.jpeg",  emoji: "🔀", label: "pull request",   ok: true  },
+  { image: "captcha/img7.jpeg",  emoji: "🚀", label: "deployment",     ok: true  },
+  { image: "captcha/img8.jpeg",  emoji: "📱", label: "social media",   ok: false },
+  { image: "captcha/img9.jpeg",  emoji: "🐛", label: "bug fix",        ok: true  },
+];
+
+const PROJECTS = [
+  {
+    name:   "ADD PROJECT 1 NAME HERE",
+    lang:   "C++",
+    desc:   "ADD PROJECT 1 DESCRIPTION HERE. Explain what it does, why you built it, and what problem it solves.",
+    tags:   ["C++", "DSA", "Tag1"],
+    github: "https://github.com/ADD_YOUR_USERNAME/ADD_REPO_1",
+  },
+  {
+    name:   "ADD PROJECT 2 NAME HERE",
+    lang:   "Python",
+    desc:   "ADD PROJECT 2 DESCRIPTION HERE. Explain what it does, why you built it, and what problem it solves.",
+    tags:   ["Python", "Automation", "Tag2"],
+    github: "https://github.com/ADD_YOUR_USERNAME/ADD_REPO_2",
+  },
+  {
+    name:   "ADD PROJECT 3 NAME HERE",
+    lang:   "C++",
+    desc:   "ADD PROJECT 3 DESCRIPTION HERE. Explain what it does, why you built it, and what problem it solves.",
+    tags:   ["C++", "Algorithms", "Tag3"],
+    github: "https://github.com/ADD_YOUR_USERNAME/ADD_REPO_3",
+  },
+];
+
+const ABOUT = {
+  h: "Hey, I'm Tanishk.",
+  p: "ADD A SHORT BIO HERE — a 2-3 sentence intro about who you are, what you do, and what drives you.",
+  tags: ["C++", "DSA", "LeetCode", "Systems", "Problem Solving"],
+};
+
+/* ✏️ EDUCATION CONTENT */
+const EDUCATION = {
+  h: "Where I've studied.",
+  p: "ADD YOUR EDUCATION HERE — school name, degree, years attended, and anything notable about your academic journey.",
+  tags: ["ADD SCHOOL NAME", "ADD DEGREE", "ADD YEAR", "ADD CITY"],
+};
+
+const FULL_BIO = {
+  name:   "ADD YOUR FULL NAME HERE",
+  photo:  "photo.jpg",          
+  bio1:   "ADD PARAGRAPH 1 — your background, where you're from, what got you into tech.",
+  bio2:   "ADD PARAGRAPH 2 — what you're working on now, what excites you, where you're headed.",
+  github: "https://github.com/ADD_YOUR_USERNAME",
+  linkedin: "https://linkedin.com/in/ADD_YOUR_USERNAME",
+  email:  "ADD_YOUR_EMAIL@gmail.com",
+};
+const SKILLS = {
+  h: "What I work with.",
+  p: "Proficient in C++, Python, and the full cycle from problem to working implementation. Comfortable with STL, pointers, references, and core DSA patterns. Growing rapidly — staying hands-on every day.",
+  tags: ["C++", "Python", "STL", "DSA", "Git", "Algorithms", "Data Structures"],
+};
+const BLOG = {
+  h: "Thinking out loud.",
+  p: "Occasional writing on DSA patterns, C++ insights, engineering observations, and learning notes. Shorter than essays, more useful than tweets.",
+  tags: ["DSA Notes", "C++ Tips", "Engineering", "Learning Log"],
+};
+
+const FACTS = [
+  { type:"fact", emoji:"⚡", text:"This is your sign to clear all your active tabs and finally clean up your digital workspace. " },
+  { type:"fact", emoji:"🧩", text:"When was the last time you actually touched grass? " },
+  { type:"fact", emoji:"🐛", text:"The world is my oyster. Go prank call someone!" },
+  { type:"fact", emoji:"📐", text:"You NEED to order you fav dish like right now." },
+  { type:"fact", emoji:"🌙", text:"Damn you have exquisite taste in art." },
+  { type:"task", emoji:"🎯", text:"text your friend a completely random fact like sea otters sleep while holding hands!" },
+  { type:"task", emoji:"🔍", text:"text your friend the spoliers about the movie they want to watch." },
+  { type:"task", emoji:"💭", text:"This is your sign to fold your laundry." },
+  { type:"task", emoji:"🏆", text:"Text someone you are meaning to reconnect with. " },
+  { type:"task", emoji:"🎲", text:"Try a cuisine you have never tried in your life this week!" },
+];
+
+let factsShown = 0;
+
+function showFact() {
+  const item = FACTS[Math.floor(Math.random() * FACTS.length)];
+  factsShown++;
+  document.getElementById('fact-title').textContent = item.type === 'fact' ? 'Did you know?' : 'Quick challenge';
+  const badge = document.getElementById('fact-badge');
+  badge.textContent = item.type === 'fact' ? 'FUN FACT' : 'CHALLENGE';
+  badge.className = 'fact-badge ' + item.type;
+  document.getElementById('fact-emoji').textContent = item.emoji;
+  document.getElementById('fact-text').textContent = item.text;
+  document.getElementById('fact-counter').textContent = factsShown + ' shown so far';
+  document.getElementById('fact-overlay').classList.add('open');
+}
+
+function closeFact() {
+  document.getElementById('fact-overlay').classList.remove('open');
+  document.getElementById('splash').classList.add('show');
+}
+
+function tick(){ document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}); }
+tick(); setInterval(tick, 1000);
+
+let order = [], chosen = new Set();
+function shuffle(a){ return [...a].sort(() => Math.random() - .5); }
+
+function buildGrid(){
+  order = shuffle(CELLS); chosen.clear();
+  const g = document.getElementById('cap-grid'); g.innerHTML = '';
+  order.forEach((c, i) => {
+    const el = document.createElement('div'); el.className = 'cap-cell';
+    const hasImg = c.image && c.image.trim() !== '';
+    el.innerHTML = `
+      <div class="cell-inner" style="${hasImg ? '' : 'background:#1a1a2e;'}">
+        ${hasImg
+          ? `<img src="${c.image}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="cell-emoji" style="display:none">${c.emoji}</span>`
+          : `<span class="cell-emoji">${c.emoji}</span>`}
+      </div>
+      <div class="chk"><svg viewBox="0 0 13 13" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>`;
+    el.onclick = () => {
+      if(chosen.has(i)){ chosen.delete(i); el.classList.remove('selected'); }
+      else { chosen.add(i); el.classList.add('selected'); }
+    };
+    g.appendChild(el);
+  });
+  const btn = document.getElementById('verify-btn');
+  btn.textContent = 'VERIFY'; btn.className = 'verify-btn';
+}
+
+function verify(){
+  const btn = document.getElementById('verify-btn');
+  if(chosen.size === 0){
+    btn.textContent = 'SELECT SOME'; btn.classList.add('err');
+    setTimeout(() => { btn.textContent = 'VERIFY'; btn.classList.remove('err'); }, 1600);
+    return;
+  }
+  document.querySelectorAll('.cap-cell').forEach(el => el.classList.remove('selected'));
+  chosen.clear();
+  showFact();
+}
+
+function enterSite(){
+  document.getElementById('splash').classList.remove('show');
+  document.getElementById('hint').textContent = 'verified ✓  —  explore the folders';
+  document.querySelectorAll('.folder').forEach(f => {
+    f.classList.add('pulse');
+    f.addEventListener('animationend', () => f.classList.remove('pulse'), { once: true });
+  });
+}
+
+function closeOverlay(id, e){
+  if(!e || e.target === document.getElementById(id))
+    document.getElementById(id).classList.remove('open');
+}
+function openOverlay(id){ document.getElementById(id).classList.add('open'); }
+
+function showFolder(title, data, actions){
+  document.getElementById('fm-title').textContent = title.toUpperCase();
+  document.getElementById('fm-h').textContent = data.h;
+  document.getElementById('fm-p').textContent = data.p;
+  document.getElementById('fm-tags').innerHTML = data.tags.map(t => `<span class="tag">${t}</span>`).join('');
+  document.getElementById('fm-actions').innerHTML = actions || '';
+  openOverlay('folder-overlay');
+}
+
+function openAbout(){ showFolder('About Me', ABOUT, `<button class="modal-action" onclick="openFullBio()">Read Full Bio →</button>`); }
+function openEducation(){ showFolder('Education', EDUCATION, ``); }
+function openSkills(){ showFolder('Skills / Stack', SKILLS, `<button class="modal-action">Full Skill List →</button>`); }
+function openBlog(){ showFolder('Blog / Notes', BLOG, `<button class="modal-action">Read Posts →</button>`); }
+
+function openResume(){
+  const a = document.createElement('a');
+  a.href = 'resume.pdf'; a.download = 'Tanishk_Resume.pdf';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  showFolder('Resume', {
+    h: 'CV_2024.pdf',
+    p: 'Your resume download should start automatically. If it did not, make sure resume.pdf is in the same folder as this HTML file.',
+    tags: ['PDF', 'Downloading…']
+  }, `<a class="modal-action" href="resume.pdf" download="Tanishk_Resume.pdf">Download Again →</a>`);
+}
+
+function openProjects(){
+  const list = document.getElementById('file-list');
+  list.innerHTML = PROJECTS.map((p, i) => `
+    <li class="file-item" onclick="openProjectDetail(${i})">
+      <span class="file-icon">📄</span>
+      <span class="file-name">${p.name}</span>
+      <span class="file-lang">${p.lang}</span>
+      <span class="file-arrow">›</span>
+    </li>`).join('');
+  openOverlay('projects-overlay');
+}
+
+function openProjectDetail(i){
+  const p = PROJECTS[i];
+  document.getElementById('pd-title').textContent = p.name.toUpperCase();
+  document.getElementById('pd-name').textContent = p.name;
+  document.getElementById('pd-desc').textContent = p.desc;
+  document.getElementById('pd-tags').innerHTML = p.tags.map(t => `<span class="proj-tag">${t}</span>`).join('');
+  document.getElementById('pd-ghbtn').href = p.github;
+  closeOverlay('projects-overlay');
+  openOverlay('proj-detail-overlay');
+}
+
+function openContact(){ openOverlay('contact-overlay'); }
+
+buildGrid();
+</script>
+
+<!-- SPOTIFY WIDGET -->
+<div class="spotify-widget">
+  <div class="spotify-bar" onclick="toggleSpotify()">
+    <div class="spotify-bar-left">
+      <div class="spotify-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+      </div>
+      <span class="spotify-bar-title">Now Playing</span>
+    </div>
+    <div class="spotify-winbtns">
+      <div class="spotify-winbtn close"  onclick="event.stopPropagation(); document.querySelector('.spotify-widget').style.display='none'"></div>
+      <div class="spotify-winbtn min"    onclick="event.stopPropagation(); toggleSpotify()"></div>
+      <div class="spotify-winbtn expand"></div>
+    </div>
+  </div>
+  <div class="spotify-embed" id="spotify-embed">
+    <iframe
+      src="https://open.spotify.com/embed/playlist/3jIY8H5pYfTgo1h8AAAZAR?utm_source=generator&theme=0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy">
+    </iframe>
+  </div>
+</div>
+
+<script>
+function toggleSpotify() {
+  document.getElementById('spotify-embed').classList.toggle('collapsed');
+}
+</script>
+
+
+<script>
+/* ── DRAGGABLE FOLDERS, CAPTCHA & SPOTIFY ── */
+(function(){
+  let dragging = null, offX = 0, offY = 0, didDrag = false;
+
+  function makeDraggable(el, isAbsolute) {
+    el.addEventListener('mousedown', e => {
+      if(e.button !== 0) return;
+      dragging = el;
+      didDrag  = false;
+      const rect = el.getBoundingClientRect();
+      offX = e.clientX - rect.left;
+      offY = e.clientY - rect.top;
+      el.classList.add('dragging');
+      if(isAbsolute) {
+        el.style.right  = 'auto';
+        el.style.bottom = 'auto';
+        el.style.left   = rect.left + 'px';
+        el.style.top    = rect.top  + 'px';
+      } else {
+        // fixed elements
+        el.style.right  = 'auto';
+        el.style.bottom = 'auto';
+        el.style.left   = rect.left + 'px';
+        el.style.top    = rect.top  + 'px';
+        el.style.position = 'fixed';
+      }
+      e.preventDefault();
+    });
+  }
+
+  // folders (absolute inside .desktop)
+  document.querySelectorAll('.folder').forEach(f => makeDraggable(f, true));
+
+  // spotify widget (fixed)
+  const spotify = document.querySelector('.spotify-widget');
+  if(spotify) makeDraggable(spotify, false);
+
+  document.addEventListener('mousemove', e => {
+    if(!dragging) return;
+    const moved = Math.abs(e.movementX) + Math.abs(e.movementY);
+    if(moved > 1) didDrag = true;
+
+    const isFixed = getComputedStyle(dragging).position === 'fixed';
+    if(isFixed) {
+      let x = e.clientX - offX;
+      let y = e.clientY - offY;
+      x = Math.max(0, Math.min(x, window.innerWidth  - dragging.offsetWidth));
+      y = Math.max(0, Math.min(y, window.innerHeight - dragging.offsetHeight));
+      dragging.style.left = x + 'px';
+      dragging.style.top  = y + 'px';
+    } else {
+      const container = dragging.closest('.desktop') || document.body;
+      const dr = container.getBoundingClientRect();
+      let x = e.clientX - dr.left - offX;
+      let y = e.clientY - dr.top  - offY;
+      x = Math.max(0, Math.min(x, dr.width  - dragging.offsetWidth));
+      y = Math.max(0, Math.min(y, dr.height - dragging.offsetHeight));
+      dragging.style.left = x + 'px';
+      dragging.style.top  = y + 'px';
+    }
+  });
+
+  document.addEventListener('mouseup', e => {
+    if(!dragging) return;
+    dragging.classList.remove('dragging');
+    if(!didDrag && dragging.dataset.onclick) {
+    }
+    dragging = null;
+  });
+
+  document.querySelectorAll('.folder').forEach(folder => {
+    folder.addEventListener('click', e => {
+      if(didDrag) { e.stopImmediatePropagation(); }
+    }, true);
+  });
+
+})();
+</script>
+
+<!-- FULL BIO OVERLAY -->
+<div class="overlay" id="bio-overlay" onclick="closeOverlay('bio-overlay',event)">
+  <div class="modal bio-modal" onclick="event.stopPropagation()">
+    <div class="modal-bar">
+      <span class="modal-bar-title">About Me</span>
+      <div class="modal-x" onclick="closeOverlay('bio-overlay')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="bio-top">
+        <div class="bio-photo" id="bio-photo-wrap">👤</div>
+        <div>
+          <div class="bio-name" id="bio-name"></div>
+          <div class="bio-tagline">Developer · Raipur, CG</div>
+        </div>
+      </div>
+      <div class="bio-body">
+        <p id="bio-p1"></p>
+        <p id="bio-p2"></p>
+      </div>
+      <div class="bio-links">
+        <a class="bio-link" id="bio-gh" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.005 2.04.138 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+        <a class="bio-link" id="bio-li" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46C23.21 24 24 23.23 24 22.28V1.72C24 .77 23.21 0 22.23 0z"/></svg>
+          LinkedIn
+        </a>
+        <a class="bio-link" id="bio-em" href="#">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          Email
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openFullBio() {
+  closeOverlay('folder-overlay');
+  document.getElementById('bio-name').textContent = FULL_BIO.name;
+  document.getElementById('bio-p1').textContent   = FULL_BIO.bio1;
+  document.getElementById('bio-p2').textContent   = FULL_BIO.bio2;
+  document.getElementById('bio-gh').href          = FULL_BIO.github;
+  document.getElementById('bio-li').href          = FULL_BIO.linkedin;
+  document.getElementById('bio-em').href          = 'mailto:' + FULL_BIO.email;
+  const wrap = document.getElementById('bio-photo-wrap');
+  if(FULL_BIO.photo) {
+    wrap.innerHTML = `<img src="${FULL_BIO.photo}" alt="photo" onerror="this.parentElement.innerHTML='👤'">`;
+  }
+  openOverlay('bio-overlay');
+}
+</script>
+
+<script>
+const NAME_TILES = [
+  { image: "letters/t.jpeg", x: 18,  y: 80  },
+  { image: "letters/a.jpeg", x: 80,  y: 95 },
+  { image: "letters/n.jpeg", x: 140,  y: 65 },
+  { image: "letters/i.jpeg", x: 200,  y: 80 },
+  { image: "letters/s.jpeg", x: 260,  y: 90 },
+  { image: "letters/h.jpeg", x: 320,  y: 68 },
+  { image: "letters/k.jpeg", x: 380,  y: 86 },
+  { image: "letters/g.jpeg", x: 1100, y: 80  },
+  { image: "letters/a(1).jpeg", x: 1160, y: 65 },
+  { image: "letters/n(1).jpeg", x: 1220, y: 95 },
+  { image: "letters/g(1).jpeg", x: 1280, y: 80 },
+  { image: "letters/w.jpeg", x: 1340, y: 68 },
+  { image: "letters/a.jpeg", x: 1400, y: 86 },
+  { image: "letters/r.jpeg", x: 1460, y: 90 },
+];
+
+(function(){
+  NAME_TILES.forEach((tile, idx) => {
+    const el = document.createElement('div');
+    el.className = 'name-tile';
+    el.style.left = tile.x + 'px';
+    el.style.top  = tile.y + 'px';
+
+    if(tile.image) {
+      el.innerHTML = `
+        <img src="${tile.image}" alt="${tile.letter}"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="tile-bg" style="display:none">${tile.letter}</div>
+        <div class="tile-letter">${tile.letter}</div>`;
+    } else {
+      el.innerHTML = `<div class="tile-bg">${tile.letter}</div>`;
+    }
+
+    document.body.appendChild(el);
+
+    // drag logic
+    let ox = 0, oy = 0;
+    el.addEventListener('mousedown', e => {
+      if(e.button !== 0) return;
+      ox = e.clientX - el.getBoundingClientRect().left;
+      oy = e.clientY - el.getBoundingClientRect().top;
+      el.classList.add('dragging');
+      el.style.position = 'fixed';
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', e => {
+      if(!el.classList.contains('dragging')) return;
+      let x = e.clientX - ox;
+      let y = e.clientY - oy;
+      x = Math.max(0, Math.min(x, window.innerWidth  - el.offsetWidth));
+      y = Math.max(0, Math.min(y, window.innerHeight - el.offsetHeight));
+      el.style.left = x + 'px';
+      el.style.top  = y + 'px';
+    });
+    document.addEventListener('mouseup', () => {
+      el.classList.remove('dragging');
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
