@@ -373,7 +373,7 @@
 
 </div>
 
-<div class="hint" id="hint">click folders to explore · select dev images · verify to enter</div>
+<div class="hint" id="hint">click folders to explore · select images that you like · verify to enter</div>
 
 <div class="dock">
   <div class="dock-item" onclick="openAbout()">👤<div class="dock-tip">About</div></div>
@@ -663,7 +663,7 @@ function openSkills(){ showFolder('Skills / Stack', SKILLS, `<button class="moda
 
 function openResume(){
   const a = document.createElement('a');
-  a.href = 'resume.pdf'; a.download = 'TanishkGangwar_Resume.pdf';
+  a.href = 'TanishkGangwar_resume.pdf'; a.download = 'TanishkGangwar_Resume.pdf';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   showFolder('Resume', {
     h: 'my_resume.pdf',
