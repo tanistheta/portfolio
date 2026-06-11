@@ -9,6 +9,14 @@
 <meta property="og:title" content="Tanishk Gangwar - Tanistheta">
 <meta property="og:description" content="Portfolio. Research on commit-history entropy and AI's behavioral fingerprint in open source.">
 <meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta property="og:url" content="https://tanishkgangwar.vercel.app">
+<meta property="og:image" content="https://tanishkgangwar.vercel.app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tanishk Gangwar - Tanistheta">
+<meta name="twitter:description" content="Research on commit-history entropy and AI's behavioral fingerprint in open source.">
+<meta name="twitter:image" content="https://tanishkgangwar.vercel.app/og.png">
+<link rel="preload" as="image" href="wallpaper.jpeg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
@@ -95,6 +103,7 @@
   .cap-brand .b2 { font-size:11px; font-weight:700; color:#555; display:block; font-family:'Space Mono',monospace; }
   .verify-btn { background:#4285f4; color:#fff; border:none; padding:9px 20px; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; border-radius:2px; transition:background .15s,transform .1s; }
   .verify-btn:hover { background:#1a73e8; }
+  .verify-btn:focus-visible { outline:2px solid #fff; outline-offset:2px; }
   .verify-btn.err { background:#e24b4a; }
 
   .hint { position:fixed; bottom:72px; left:50%; transform:translateX(-50%); font-size:10px; color:var(--muted); letter-spacing:.04em; pointer-events:none; z-index:200; white-space:nowrap; }
@@ -102,8 +111,9 @@
   .dock { position:fixed; bottom:0; left:0; right:0; height:58px; background:rgba(30,30,30,.93); border-top:1px solid rgba(255,255,255,.07); display:flex; align-items:center; justify-content:center; gap:4px; z-index:500; }
   .dock-item { width:46px; height:46px; display:flex; align-items:center; justify-content:center; border-radius:10px; cursor:pointer; font-size:22px; position:relative; transition:transform .15s,background .15s; }
   .dock-item:hover { transform:scale(1.25) translateY(-5px); background:rgba(255,255,255,.1); }
+  .dock-item:focus-visible { outline:2px solid var(--blue); outline-offset:2px; background:rgba(255,255,255,.1); }
   .dock-tip { position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:rgba(0,0,0,.8); color:#fff; font-size:10px; padding:3px 8px; border-radius:4px; white-space:nowrap; opacity:0; pointer-events:none; font-family:'Space Mono',monospace; transition:opacity .15s; }
-  .dock-item:hover .dock-tip { opacity:1; }
+  .dock-item:hover .dock-tip, .dock-item:focus-visible .dock-tip { opacity:1; }
 
   /*modals*/
   .overlay { position:fixed; inset:0; background:rgba(20,18,14,.5); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px); z-index:700; display:none; align-items:center; justify-content:center; padding:16px; }
@@ -114,8 +124,9 @@
   .modal { background:var(--surface); border:1.5px solid var(--dark2); border-radius:4px; box-shadow:var(--shadow-hard-lg); overflow:hidden; max-width:100%; max-height:calc(100vh - 100px); display:flex; flex-direction:column; }
   .modal-bar { background:var(--dark2); padding:10px 14px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
   .modal-bar-title { font-family:'Syne',sans-serif; font-size:12px; font-weight:700; color:#f0ebe0; letter-spacing:.07em; text-transform:uppercase; }
-  .modal-x { width:16px; height:16px; background:#ff5f57; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:#8b0000; transition:transform .15s; flex-shrink:0; }
+  .modal-x { width:16px; height:16px; background:#ff5f57; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:#8b0000; transition:transform .15s; flex-shrink:0; border:none; }
   .modal-x:hover { transform:scale(1.15); }
+  .modal-x:focus-visible { outline:2px solid #fff; outline-offset:2px; }
   .modal-body { overflow-y:auto; }
 
   .folder-modal { width:440px; }
@@ -127,6 +138,7 @@
   .modal-action { background:var(--blue); color:#fff; border:none; padding:10px 20px; cursor:pointer; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; letter-spacing:.06em; text-transform:uppercase; border-radius:2px; transition:background .15s, box-shadow .15s, transform .1s; margin-right:8px; margin-bottom:6px; box-shadow:3px 3px 0 rgba(0,0,0,.18); text-decoration:none; display:inline-block; }
   .modal-action:hover { background:var(--blue2); transform:translate(-1px,-1px); box-shadow:4px 4px 0 rgba(0,0,0,.2); }
   .modal-action:active { transform:translate(1px,1px); box-shadow:2px 2px 0 rgba(0,0,0,.18); }
+  .modal-action:focus-visible { outline:2px solid var(--dark2); outline-offset:2px; }
 
   .projects-modal { width:500px; }
   .projects-modal .modal-body { padding:0; }
@@ -134,6 +146,7 @@
   .file-item { display:flex; align-items:center; gap:12px; padding:13px 20px; border-bottom:1px solid #ebebeb; cursor:pointer; transition:background .12s, padding-left .12s; }
   .file-item:last-child { border-bottom:none; }
   .file-item:hover { background:#f0ede6; padding-left:26px; }
+  .file-item:focus-visible { outline:2px solid var(--blue); outline-offset:-2px; background:#f0ede6; }
   .file-icon { font-size:18px; flex-shrink:0; }
   .file-name { font-size:12px; font-weight:700; color:var(--text); flex:1; }
   .file-meta { font-size:10px; color:var(--muted); display:block; font-weight:400; margin-top:2px; }
@@ -144,16 +157,19 @@
   .proj-dialog .modal-body { padding:24px; }
   .proj-dialog h3 { font-family:'Syne',sans-serif; font-size:19px; font-weight:800; letter-spacing:-.01em; margin-bottom:4px; }
   .proj-finding { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--blue2); margin-bottom:12px; display:block; }
+  #pd-img { width:100%; border:1px solid #e0ddd4; border-radius:3px; margin-bottom:16px; background:#fff; display:block; }
   .proj-dialog p { font-size:12px; line-height:1.85; color:#444; margin-bottom:16px; }
   .proj-dialog .proj-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:18px; }
   .proj-dialog .proj-tag { background:#f0ede8; color:var(--text); font-size:10px; padding:3px 9px; border-radius:2px; font-weight:700; letter-spacing:.03em; border:1px solid #e0ddd4; }
   .github-btn { display:inline-flex; align-items:center; gap:8px; background:#1e1e1e; color:#fff; border:none; padding:10px 18px; cursor:pointer; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; letter-spacing:.05em; text-transform:uppercase; border-radius:2px; transition:transform .1s, box-shadow .15s; text-decoration:none; box-shadow:3px 3px 0 rgba(0,0,0,.18); }
   .github-btn:hover { transform:translate(-1px,-1px); box-shadow:4px 4px 0 rgba(0,0,0,.22); }
+  .github-btn:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
   .github-btn svg { width:18px; height:18px; fill:#fff; }
 
   .contact-links { display:flex; flex-direction:column; gap:10px; margin-top:4px; }
   .contact-link { display:flex; align-items:center; gap:12px; padding:10px 14px; border:1px solid #e0e0e0; border-radius:3px; cursor:pointer; text-decoration:none; color:var(--text); transition:background .12s,border-color .12s,transform .12s,box-shadow .12s; }
   .contact-link:hover { background:#f5f3ef; border-color:var(--dark2); transform:translate(-1px,-1px); box-shadow:3px 3px 0 rgba(0,0,0,.1); }
+  .contact-link:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
   .contact-link-icon { width:32px; height:32px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
   .contact-link-text { flex:1; }
   .contact-link-text .cl-name { font-size:12px; font-weight:700; }
@@ -177,6 +193,7 @@
   .fact-counter { font-size:10px; color:var(--muted); letter-spacing:.04em; font-family:'Space Mono',monospace; }
   .fact-btn { background:var(--dark2); color:#f0ebe0; border:none; padding:10px 22px; cursor:pointer; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; letter-spacing:.06em; text-transform:uppercase; border-radius:2px; transition:background .15s; box-shadow:3px 3px 0 rgba(0,0,0,.18); }
   .fact-btn:hover { background:#3a3a3a; }
+  .fact-btn:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
 
   .splash {
     position:fixed; inset:0;
@@ -194,6 +211,7 @@
   .splash-big { font-family:'Syne',sans-serif; font-size:clamp(28px, 6vw, 54px); font-weight:800; color:#f0ebe0; letter-spacing:-.03em; }
   .splash-enter { margin-top:20px; background:var(--blue); color:#fff; border:none; padding:13px 32px; cursor:pointer; font-family:'Syne',sans-serif; font-weight:700; font-size:13px; letter-spacing:.07em; text-transform:uppercase; border-radius:2px; transition:background .15s; box-shadow:4px 4px 0 rgba(0,0,0,.3); }
   .splash-enter:hover { background:var(--blue2); }
+  .splash-enter:focus-visible { outline:2px solid #fff; outline-offset:2px; }
 
   /*spotify widget*/
   .spotify-widget {
@@ -231,6 +249,7 @@
   .bio-links { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
   .bio-link { display:inline-flex; align-items:center; gap:6px; background:#f0ede8; color:var(--text); font-size:10px; font-weight:700; padding:6px 12px; border-radius:2px; text-decoration:none; letter-spacing:.04em; transition:background .12s, transform .1s; }
   .bio-link:hover { background:#e0ddd6; transform:translateY(-1px); }
+  .bio-link:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
   .bio-link svg { width:14px; height:14px; fill:var(--text); }
 
   /*skills*/
@@ -310,7 +329,7 @@
 
   <div class="folder" style="top:17%; right:30%" tabindex="0" role="button" aria-label="Projects" onclick="openProjects()">
     <svg viewBox="0 0 56 48" fill="none" aria-hidden="true"><rect x="0" y="10" width="56" height="36" rx="3" fill="#5B9BD5"/><path d="M0 15C0 12.2 2.2 10 5 10H22L27 5H52C54.8 5 56 7.2 56 10V15H0Z" fill="#3A7AB8"/><text x="28" y="36" text-anchor="middle" fill="white" font-size="15" opacity=".75" font-family="monospace">{…}</text></svg>
-    <span class="folder-label">Projects</span><span class="folder-sub">3 items</span>
+    <span class="folder-label">Projects</span><span class="folder-sub" id="projects-count">3 items</span>
   </div>
 
   <div class="folder" style="top:38%; left:70%" tabindex="0" role="button" aria-label="Resume" onclick="openResume()">
@@ -362,24 +381,24 @@
 
 <div class="dock">
   <!-- GitHub -->
-  <div class="dock-item" onclick="window.open('https://github.com/tanistheta','_blank')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+  <div class="dock-item" tabindex="0" role="button" aria-label="GitHub" onclick="window.open('https://github.com/tanistheta','_blank')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="white" aria-hidden="true">
       <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.005 2.04.138 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/>
     </svg>
     <div class="dock-tip">GitHub</div>
   </div>
 
   <!-- LinkedIn -->
-  <div class="dock-item" onclick="window.open('https://www.linkedin.com/in/tanishk-gangwar-809614363/','_blank')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="#0a66c2">
+  <div class="dock-item" tabindex="0" role="button" aria-label="LinkedIn" onclick="window.open('https://www.linkedin.com/in/tanishk-gangwar-809614363/','_blank')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="#0a66c2" aria-hidden="true">
       <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46C23.21 24 24 23.23 24 22.28V1.72C24 .77 23.21 0 22.23 0z"/>
     </svg>
     <div class="dock-tip">LinkedIn</div>
   </div>
 
   <!-- Instagram -->
-  <div class="dock-item" onclick="window.open('https://instagram.com/tan_isshhk','_blank')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="url(#ig)">
+  <div class="dock-item" tabindex="0" role="button" aria-label="Instagram" onclick="window.open('https://instagram.com/tan_isshhk','_blank')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="url(#ig)" aria-hidden="true">
       <defs>
         <linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%">
           <stop offset="0%" style="stop-color:#f09433"/>
@@ -398,8 +417,8 @@
   <div style="width:1px;height:28px;background:rgba(255,255,255,0.12);margin:0 4px;"></div>
 
   <!-- Resume Download -->
-  <div class="dock-item" onclick="downloadResume()">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <div class="dock-item" tabindex="0" role="button" aria-label="Download resume" onclick="downloadResume()">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
       <polyline points="14 2 14 8 20 8"/>
       <line x1="12" y1="11" x2="12" y2="17"/>
@@ -411,10 +430,10 @@
 
 <!-- folder overlay -->
 <div class="overlay" id="folder-overlay" onclick="closeOverlay('folder-overlay',event)">
-  <div class="modal folder-modal" onclick="event.stopPropagation()">
+  <div class="modal folder-modal" role="dialog" aria-modal="true" aria-labelledby="fm-title" onclick="event.stopPropagation()">
     <div class="modal-bar">
       <span class="modal-bar-title" id="fm-title"></span>
-      <div class="modal-x" onclick="closeOverlay('folder-overlay')">✕</div>
+      <button class="modal-x" aria-label="Close" onclick="closeOverlay('folder-overlay')">✕</button>
     </div>
     <div class="modal-body">
       <h3 id="fm-h"></h3>
@@ -428,10 +447,10 @@
 
 <!-- project lists overlay -->
 <div class="overlay" id="projects-overlay" onclick="closeOverlay('projects-overlay',event)">
-  <div class="modal projects-modal" onclick="event.stopPropagation()">
+  <div class="modal projects-modal" role="dialog" aria-modal="true" aria-label="Projects" onclick="event.stopPropagation()">
     <div class="modal-bar">
       <span class="modal-bar-title">Projects</span>
-      <div class="modal-x" onclick="closeOverlay('projects-overlay')">✕</div>
+      <button class="modal-x" aria-label="Close" onclick="closeOverlay('projects-overlay')">✕</button>
     </div>
     <div class="modal-body">
       <ul class="file-list" id="file-list"></ul>
@@ -441,18 +460,19 @@
 
 <!-- project details overlay -->
 <div class="overlay" id="proj-detail-overlay" onclick="closeOverlay('proj-detail-overlay',event)">
-  <div class="modal proj-dialog" onclick="event.stopPropagation()">
+  <div class="modal proj-dialog" role="dialog" aria-modal="true" aria-labelledby="pd-title" onclick="event.stopPropagation()">
     <div class="modal-bar">
       <span class="modal-bar-title" id="pd-title"></span>
-      <div class="modal-x" onclick="closeOverlay('proj-detail-overlay')">✕</div>
+      <button class="modal-x" aria-label="Close" onclick="closeOverlay('proj-detail-overlay')">✕</button>
     </div>
     <div class="modal-body">
       <h3 id="pd-name"></h3>
       <span class="proj-finding" id="pd-finding"></span>
+      <img id="pd-img" alt="" style="display:none">
       <p id="pd-desc"></p>
       <div class="proj-tags" id="pd-tags"></div>
       <a class="github-btn" id="pd-ghbtn" href="#" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.005 2.04.138 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.005 2.04.138 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
         View on GitHub
       </a>
     </div>
@@ -461,27 +481,27 @@
 
 <!-- contact overlay -->
 <div class="overlay" id="contact-overlay" onclick="closeOverlay('contact-overlay',event)">
-  <div class="modal folder-modal" onclick="event.stopPropagation()">
+  <div class="modal folder-modal" role="dialog" aria-modal="true" aria-label="Contact" onclick="event.stopPropagation()">
     <div class="modal-bar">
       <span class="modal-bar-title">Contact</span>
-      <div class="modal-x" onclick="closeOverlay('contact-overlay')">✕</div>
+      <button class="modal-x" aria-label="Close" onclick="closeOverlay('contact-overlay')">✕</button>
     </div>
     <div class="modal-body">
       <h3>Let's talk.</h3>
       <p>Open to research collabs, internships, and conversations about commit histories. Pick a channel.</p>
       <div class="contact-links">
         <a class="contact-link" href="https://github.com/tanistheta" target="_blank" rel="noopener">
-          <div class="contact-link-icon" style="background:#1e1e1e"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.005 2.04.138 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg></div>
+          <div class="contact-link-icon" style="background:#1e1e1e"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.005 2.04.138 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg></div>
           <div class="contact-link-text"><div class="cl-name">GitHub</div><div class="cl-val">github.com/tanistheta</div></div>
           <span class="contact-link-arrow">↗</span>
         </a>
         <a class="contact-link" href="https://www.linkedin.com/in/tanishk-gangwar-809614363/" target="_blank" rel="noopener">
-          <div class="contact-link-icon" style="background:#0a66c2"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46C23.21 24 24 23.23 24 22.28V1.72C24 .77 23.21 0 22.23 0z"/></svg></div>
+          <div class="contact-link-icon" style="background:#0a66c2"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46C23.21 24 24 23.23 24 22.28V1.72C24 .77 23.21 0 22.23 0z"/></svg></div>
           <div class="contact-link-text"><div class="cl-name">LinkedIn</div><div class="cl-val">linkedin.com/in/tanishk-gangwar</div></div>
           <span class="contact-link-arrow">↗</span>
         </a>
         <a class="contact-link" href="mailto:tanishk7531@gmail.com">
-          <div class="contact-link-icon" style="background:#ea4335"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+          <div class="contact-link-icon" style="background:#ea4335"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
           <div class="contact-link-text"><div class="cl-name">Email</div><div class="cl-val">tanishk7531@gmail.com</div></div>
           <span class="contact-link-arrow">↗</span>
         </a>
@@ -499,7 +519,7 @@
 
 <!-- fact dialog -->
 <div class="fact-overlay" id="fact-overlay">
-  <div class="fact-box">
+  <div class="fact-box" role="dialog" aria-modal="true" aria-labelledby="fact-text">
     <div class="fact-bar">
       <span class="fact-bar-title" id="fact-title"></span>
       <span class="fact-badge" id="fact-badge"></span>
@@ -539,6 +559,8 @@ const CELLS = [
 const PROJECTS = [
   {
     name:    "Sekivara",
+    image:   "figures/sekivara-event-study.png",
+    imageAlt: "Event study plot showing commit size shift after Copilot adoption",
     lang:    "Python",
     meta:    "9 repos · ~403k commits · causal inference",
     finding: "Key finding: Copilot adoption → smaller, more atomic commits",
@@ -548,6 +570,8 @@ const PROJECTS = [
   },
   {
     name:    "Entropic Fingerprint",
+    image:   "figures/entropy-volume.png",
+    imageAlt: "Scatter plot of commit volume vs entropy, Spearman r = 0.817",
     lang:    "Python",
     meta:    "3 repos · 171k commits · information theory",
     finding: "Key finding: commit volume ↔ entropy, Spearman r = 0.817",
@@ -562,7 +586,8 @@ const PROJECTS = [
     finding: "Fairness metrics built into the pipeline, not bolted on",
     desc:    "An end-to-end machine learning pipeline with fairness detection built into the workflow: it audits model predictions for demographic bias, reports group-level fairness metrics alongside standard performance metrics, and flags disparities before deployment instead of after.",
     tags:    ["Python", "ML", "Fairness", "scikit-learn"],
-    github:  "https://github.com/tanistheta", /* TODO: replace with the repo URL */
+    /* will add the link to project once complete*/
+    github:  "https://github.com/tanistheta",
   },
 ];
 
@@ -600,16 +625,12 @@ const SKILLS = {
 };
 
 const FACTS = [
-  { type:"fact", emoji:"⚡", text:"This is your sign to clear all your active tabs and finally clean up your digital workspace." },
-  { type:"fact", emoji:"🧩", text:"When was the last time you actually touched grass?" },
-  { type:"fact", emoji:"🐛", text:"The world is my oyster. Go prank call someone!" },
-  { type:"fact", emoji:"📐", text:"You NEED to order your fav dish like right now." },
-  { type:"fact", emoji:"🌙", text:"Damn, you have exquisite taste in art." },
-  { type:"task", emoji:"🎯", text:"Text your friend a completely random fact, like: sea otters sleep while holding hands!" },
-  { type:"task", emoji:"🔍", text:"Text your friend spoilers about the movie they want to watch." },
-  { type:"task", emoji:"💭", text:"This is your sign to fold your laundry." },
-  { type:"task", emoji:"🏆", text:"Text someone you've been meaning to reconnect with." },
-  { type:"task", emoji:"🎲", text:"Try a cuisine you've never tried in your life this week!" },
+  { type:"fact", emoji:"📊", text:"403,112 commits were analyzed for Sekivara. You just clicked through faster than any of them merged." },
+  { type:"fact", emoji:"🎲", text:"AUC 0.47 - worse than a coin flip. That number is on this site on purpose. Honest validation beats an impressive claim." },
+  { type:"fact", emoji:"📈", text:"Spearman r = 0.817. Delete the hypothesis, keep the data, and sometimes a real finding is hiding underneath." },
+  { type:"fact", emoji:"🤖", text:"Copilot's fingerprint in open source: existing contributors started making smaller, more atomic commits. New devs didn't cause it." },
+  { type:"fact", emoji:"🕰️", text:"171,881 commits across Flask, Django, and CPython - 15+ years of developer behavior, read like a dataset." },
+  { type:"fact", emoji:"🧮", text:"Shannon defined entropy in 1948. Git shipped in 2005. Pointing one at the other is the whole project." },
 ];
 
 /*clock*/
@@ -661,7 +682,9 @@ function showFact() {
   document.getElementById('fact-emoji').textContent = item.emoji;
   document.getElementById('fact-text').textContent = item.text;
   document.getElementById('fact-counter').textContent = factsShown + ' shown so far';
+  lastFocused = document.activeElement;
   document.getElementById('fact-overlay').classList.add('open');
+  document.querySelector('.fact-btn').focus();
 }
 
 function closeFact() {
@@ -680,6 +703,7 @@ function closeFact() {
     sub.textContent = '// cool human confirmed. welcome to my portfolio.';
   }
   document.getElementById('splash').classList.add('show');
+  document.querySelector('.splash-enter').focus();
 }
 
 function enterSite(){
@@ -691,17 +715,26 @@ function enterSite(){
   });
 }
 
-/*overlays*/
-function closeOverlay(id, e){
-  if(!e || e.target === document.getElementById(id))
-    document.getElementById(id).classList.remove('open');
+let lastFocused = null;
+function openOverlay(id){
+  lastFocused = document.activeElement;
+  const ov = document.getElementById(id);
+  ov.classList.add('open');
+  const x = ov.querySelector('.modal-x');
+  if(x) x.focus();
 }
-function openOverlay(id){ document.getElementById(id).classList.add('open'); }
+function closeOverlay(id, e){
+  if(!e || e.target === document.getElementById(id)){
+    document.getElementById(id).classList.remove('open');
+    if(lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+  }
+}
 
 document.addEventListener('keydown', e => {
   if(e.key === 'Escape'){
     document.querySelectorAll('.overlay.open').forEach(o => o.classList.remove('open'));
     document.getElementById('fact-overlay').classList.remove('open');
+    if(lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
   }
 });
 
@@ -734,19 +767,20 @@ function downloadResume(){
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
 
+/* adding this change for the resume to open in new tab */
 function openResume(){
-  downloadResume();
+  window.open('TanishkGangwar_resume.pdf', '_blank', 'noopener');
   showFolder('Resume', {
     h: 'my_resume.pdf',
-    p: 'Your download should start automatically. If it did not, use the button below.',
-    tags: ['PDF', 'Downloading…']
-  }, `<a class="modal-action" href="TanishkGangwar_resume.pdf" download="TanishkGangwar_Resume.pdf">Download Again →</a>`);
+    p: 'Opened in a new tab. Want a copy to keep?',
+    tags: ['PDF']
+  }, `<a class="modal-action" href="TanishkGangwar_resume.pdf" download="TanishkGangwar_Resume.pdf">Download →</a>`);
 }
 
 function openProjects(){
   const list = document.getElementById('file-list');
   list.innerHTML = PROJECTS.map((p, i) => `
-    <li class="file-item" onclick="openProjectDetail(${i})">
+    <li class="file-item" tabindex="0" role="button" aria-label="${p.name}" onclick="openProjectDetail(${i})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openProjectDetail(${i});}">
       <span class="file-icon">📄</span>
       <span class="file-name">${p.name}<span class="file-meta">${p.meta}</span></span>
       <span class="file-lang">${p.lang}</span>
@@ -760,6 +794,17 @@ function openProjectDetail(i){
   document.getElementById('pd-title').textContent = p.name.toUpperCase();
   document.getElementById('pd-name').textContent = p.name;
   document.getElementById('pd-finding').textContent = p.finding || '';
+
+  const img = document.getElementById('pd-img');
+  if (p.image) {
+    img.src = p.image;
+    img.alt = p.imageAlt || (p.name + ' figure');
+    img.style.display = 'block';
+  } else {
+    img.removeAttribute('src');
+    img.style.display = 'none';
+  }
+
   document.getElementById('pd-desc').textContent = p.desc;
   document.getElementById('pd-tags').innerHTML = p.tags.map(t => `<span class="proj-tag">${t}</span>`).join('');
   document.getElementById('pd-ghbtn').href = p.github;
@@ -784,18 +829,22 @@ function openFullBio() {
   openOverlay('bio-overlay');
 }
 
+/* keep the Projects folder sub-label in sync with the array length */
+document.getElementById('projects-count').textContent =
+  PROJECTS.length + (PROJECTS.length === 1 ? ' item' : ' items');
+
 buildGrid();
 
 /* psst hint fades after 8s */
 setTimeout(() => { const p = document.querySelector('.psst'); if(p) p.classList.add('fade'); }, 8000);
 </script>
 
-<!-- spotify widget -->
+<!-- spotify widget —iframe is injected on first expand, not at page load -->
 <div class="spotify-widget">
   <div class="spotify-bar" onclick="toggleSpotify()">
     <div class="spotify-bar-left">
       <div class="spotify-icon">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
       </div>
       <span class="spotify-bar-title">Now Playing</span>
     </div>
@@ -805,28 +854,30 @@ setTimeout(() => { const p = document.querySelector('.psst'); if(p) p.classList.
       <div class="spotify-winbtn expand"></div>
     </div>
   </div>
-  <div class="spotify-embed" id="spotify-embed">
-    <iframe
-      title="Spotify playlist"
-      src="https://open.spotify.com/embed/playlist/3jIY8H5pYfTgo1h8AAAZAR?utm_source=generator&theme=0"
-      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-      loading="lazy">
-    </iframe>
-  </div>
+  <div class="spotify-embed" id="spotify-embed"></div>
 </div>
 
 <script>
+let spotifyLoaded = false;
 function toggleSpotify() {
-  document.getElementById('spotify-embed').classList.toggle('collapsed');
+  const embed = document.getElementById('spotify-embed');
+  if (!spotifyLoaded) {
+    embed.innerHTML = '<iframe title="Spotify playlist" ' +
+      'src="https://open.spotify.com/embed/playlist/3jIY8H5pYfTgo1h8AAAZAR?utm_source=generator&theme=0" ' +
+      'allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>';
+    spotifyLoaded = true;
+  }
+  embed.classList.toggle('collapsed');
 }
+window.addEventListener('DOMContentLoaded', toggleSpotify);
 </script>
 
 <!-- full bio overlay -->
 <div class="overlay" id="bio-overlay" onclick="closeOverlay('bio-overlay',event)">
-  <div class="modal bio-modal" onclick="event.stopPropagation()">
+  <div class="modal bio-modal" role="dialog" aria-modal="true" aria-labelledby="bio-name" onclick="event.stopPropagation()">
     <div class="modal-bar">
       <span class="modal-bar-title">About Me</span>
-      <div class="modal-x" onclick="closeOverlay('bio-overlay')">✕</div>
+      <button class="modal-x" aria-label="Close" onclick="closeOverlay('bio-overlay')">✕</button>
     </div>
     <div class="modal-body">
       <div class="bio-top">
@@ -842,15 +893,15 @@ function toggleSpotify() {
       </div>
       <div class="bio-links">
         <a class="bio-link" id="bio-gh" href="#" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.005 2.04.138 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.005 2.04.138 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
           GitHub
         </a>
         <a class="bio-link" id="bio-li" href="#" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46C23.21 24 24 23.23 24 22.28V1.72C24 .77 23.21 0 22.23 0z"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46C23.21 24 24 23.23 24 22.28V1.72C24 .77 23.21 0 22.23 0z"/></svg>
           LinkedIn
         </a>
         <a class="bio-link" id="bio-em" href="#">
-          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
           Email
         </a>
       </div>
@@ -950,8 +1001,8 @@ const NAME_TILES = [
     setTimeout(() => { didDrag = false; }, 0);
   });
 
-  /* suppress click after a drag, for folders and the captcha */
-  document.querySelectorAll('.folder, .captcha-wrapper').forEach(el => {
+  /* suppress click after a drag, for folders, the captcha, and the spotify widget */
+  document.querySelectorAll('.folder, .captcha-wrapper, .spotify-widget').forEach(el => {
     el.addEventListener('click', e => {
       if(didDrag) e.stopImmediatePropagation();
     }, true);
@@ -964,6 +1015,12 @@ const NAME_TILES = [
     });
   });
 })();
+
+document.querySelectorAll('.dock-item').forEach(d => {
+  d.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); d.click(); }
+  });
+});
 </script>
 
 <div class="psst">psst - try moving the icons and letters 👀</div>
