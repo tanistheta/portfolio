@@ -579,16 +579,22 @@ const PROJECTS = [
     tags:    ["Python", "Information Theory", "Shannon Entropy", "Data Science"],
     github:  "https://github.com/tanistheta/enthropic-fingerprint",
   },
-  {
+   /*{
     name:    "Bias-Aware ML Pipeline",
     lang:    "Python",
     meta:    "fairness auditing · end-to-end ML",
     finding: "Fairness metrics built into the pipeline, not bolted on",
     desc:    "An end-to-end machine learning pipeline with fairness detection built into the workflow: it audits model predictions for demographic bias, reports group-level fairness metrics alongside standard performance metrics, and flags disparities before deployment instead of after.",
     tags:    ["Python", "ML", "Fairness", "scikit-learn"],
-    /* will add the link to project once complete*/
+     ====================================================================
+       !!! CHANGE 2 — BROKEN LINK !!!
+       This still points at your profile, NOT the repo. Before you deploy:
+         (a) replace the URL below with the real repo, OR
+         (b) delete this whole { } project object.
+       Leaving it as-is ships a dead-end "View on GitHub" button.
     github:  "https://github.com/tanistheta",
-  },
+  },*/
+
 ];
 
 const ABOUT = {
@@ -767,7 +773,7 @@ function downloadResume(){
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
 
-/* adding this change for the resume to open in new tab */
+/*folder opens the PDF in a new tab instead of force-downloading */
 function openResume(){
   window.open('TanishkGangwar_resume.pdf', '_blank', 'noopener');
   showFolder('Resume', {
@@ -839,7 +845,7 @@ buildGrid();
 setTimeout(() => { const p = document.querySelector('.psst'); if(p) p.classList.add('fade'); }, 8000);
 </script>
 
-<!-- spotify widget —iframe is injected on first expand, not at page load -->
+<!-- spotify widget- iframe is injected on first expand, not at page load -->
 <div class="spotify-widget">
   <div class="spotify-bar" onclick="toggleSpotify()">
     <div class="spotify-bar-left">
@@ -955,8 +961,11 @@ const NAME_TILES = [
   let dragging = null, offX = 0, offY = 0, didDrag = false;
 
   function makeDraggable(el) {
+    const isCaptcha = el.classList.contains('captcha-wrapper');
     el.addEventListener('pointerdown', e => {
       if(e.button !== 0 && e.pointerType === 'mouse') return;
+      // don't intercept clicks on captcha cells, verify button, etc.
+      if(isCaptcha && e.target !== el) return;
       dragging = el;
       didDrag  = false;
       const rect = el.getBoundingClientRect();
@@ -969,7 +978,7 @@ const NAME_TILES = [
       el.style.top    = rect.top  + 'px';
       el.style.position = 'fixed';
       el.setPointerCapture(e.pointerId);
-      e.preventDefault();
+      if(!isCaptcha) e.preventDefault();
     });
   }
 
@@ -1001,8 +1010,8 @@ const NAME_TILES = [
     setTimeout(() => { didDrag = false; }, 0);
   });
 
-  /* suppress click after a drag, for folders, the captcha, and the spotify widget */
-  document.querySelectorAll('.folder, .captcha-wrapper, .spotify-widget').forEach(el => {
+  /* suppress click after a drag, for folders and the spotify widget */
+  document.querySelectorAll('.folder, .spotify-widget').forEach(el => {
     el.addEventListener('click', e => {
       if(didDrag) e.stopImmediatePropagation();
     }, true);
