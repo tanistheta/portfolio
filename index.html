@@ -872,10 +872,12 @@ function toggleSpotify() {
       'src="https://open.spotify.com/embed/playlist/3jIY8H5pYfTgo1h8AAAZAR?utm_source=generator&theme=0" ' +
       'allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>';
     spotifyLoaded = true;
+    embed.classList.remove('collapsed');
+    return;
   }
   embed.classList.toggle('collapsed');
 }
-window.addEventListener('DOMContentLoaded', toggleSpotify);
+window.addEventListener('load', toggleSpotify);
 </script>
 
 <!-- full bio overlay -->
@@ -977,7 +979,7 @@ const NAME_TILES = [
       el.style.left   = rect.left + 'px';
       el.style.top    = rect.top  + 'px';
       el.style.position = 'fixed';
-      el.setPointerCapture(e.pointerId);
+      if(!isCaptcha) el.setPointerCapture(e.pointerId);
       if(!isCaptcha) e.preventDefault();
     });
   }
