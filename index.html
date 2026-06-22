@@ -161,10 +161,15 @@
   .proj-dialog p { font-size:12px; line-height:1.85; color:#444; margin-bottom:16px; }
   .proj-dialog .proj-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:18px; }
   .proj-dialog .proj-tag { background:#f0ede8; color:var(--text); font-size:10px; padding:3px 9px; border-radius:2px; font-weight:700; letter-spacing:.03em; border:1px solid #e0ddd4; }
+  .proj-dialog .proj-link-row { display:flex; flex-wrap:wrap; gap:10px; }
   .github-btn { display:inline-flex; align-items:center; gap:8px; background:#1e1e1e; color:#fff; border:none; padding:10px 18px; cursor:pointer; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; letter-spacing:.05em; text-transform:uppercase; border-radius:2px; transition:transform .1s, box-shadow .15s; text-decoration:none; box-shadow:3px 3px 0 rgba(0,0,0,.18); }
   .github-btn:hover { transform:translate(-1px,-1px); box-shadow:4px 4px 0 rgba(0,0,0,.22); }
   .github-btn:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
   .github-btn svg { width:18px; height:18px; fill:#fff; }
+  .live-btn { display:inline-flex; align-items:center; gap:8px; background:var(--blue); color:#fff; border:none; padding:10px 18px; cursor:pointer; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; letter-spacing:.05em; text-transform:uppercase; border-radius:2px; transition:transform .1s, box-shadow .15s, background .15s; text-decoration:none; box-shadow:3px 3px 0 rgba(0,0,0,.18); }
+  .live-btn:hover { background:var(--blue2); transform:translate(-1px,-1px); box-shadow:4px 4px 0 rgba(0,0,0,.22); }
+  .live-btn:focus-visible { outline:2px solid var(--dark2); outline-offset:2px; }
+  .live-btn svg { width:15px; height:15px; }
 
   .contact-links { display:flex; flex-direction:column; gap:10px; margin-top:4px; }
   .contact-link { display:flex; align-items:center; gap:12px; padding:10px 14px; border:1px solid #e0e0e0; border-radius:3px; cursor:pointer; text-decoration:none; color:var(--text); transition:background .12s,border-color .12s,transform .12s,box-shadow .12s; }
@@ -471,10 +476,16 @@
       <img id="pd-img" alt="" style="display:none">
       <p id="pd-desc"></p>
       <div class="proj-tags" id="pd-tags"></div>
-      <a class="github-btn" id="pd-ghbtn" href="#" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.005 2.04.138 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
-        View on GitHub
-      </a>
+      <div class="proj-link-row">
+        <a class="github-btn" id="pd-ghbtn" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.005 2.04.138 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          View on GitHub
+        </a>
+        <a class="live-btn" id="pd-livebtn" href="#" target="_blank" rel="noopener" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Live Demo
+        </a>
+      </div>
     </div>
   </div>
 </div>
@@ -558,6 +569,18 @@ const CELLS = [
 
 const PROJECTS = [
   {
+    name:    "Kansei 感性",
+    image:   null,
+    imageAlt: "",
+    lang:    "Python",
+    meta:    "CLIP + UMAP · self-hosted on GCP",
+    finding: "Key finding: a self-hosted ML system, end to end — model, infra, and constraint",
+    desc:    "Can a machine read taste? A 25-round image-comparison quiz that encodes every choice as a CLIP ViT-B/32 embedding, scores it against 16 hand-curated aesthetic centroids by cosine similarity, and visualizes the result in a 3D UMAP projection with kNN nearest-image retrieval. You can also upload a photo and have it classified the same way. The quiz logic was the easy part — the infrastructure wasn't: migrated off a paid host onto a free-tier GCP VM by choice (964MB RAM, two Dockerized services), diagnosed a CPU-bursting ceiling by measuring it directly instead of guessing, and cut a Docker image from 9.2GB to 1.62GB by fixing a pip dependency-resolution bug. Free HTTPS, a real domain, zero ongoing cost.",
+    tags:    ["Python", "CLIP", "UMAP", "FastAPI", "Docker", "GCP", "scikit-learn"],
+    github:  "https://github.com/tanistheta/kansei",
+    live:    "https://kansei.duckdns.org/",
+  },
+  {
     name:    "Sekivara",
     image:   "figures/sekivara-event-study.png",
     imageAlt: "Event study plot showing commit size shift after Copilot adoption",
@@ -567,6 +590,7 @@ const PROJECTS = [
     desc:    "A quasi-experimental difference-in-differences study asking whether GitHub Copilot left a measurable behavioral fingerprint in open-source development. Analyzed ~403,000 commits across 9 major repositories with HC3 robust standard errors, pre-trend validation, an event-study design, and a GA-rollout robustness check. Treated repos shifted significantly toward smaller, more atomic commits post-Copilot — and the effect was driven by existing contributors changing how they work, not by an influx of new ones.",
     tags:    ["Python", "Causal Inference", "DiD", "MSR", "statsmodels"],
     github:  "https://github.com/tanistheta/sekivara",
+    live:    null,
   },
   {
     name:    "Entropic Fingerprint",
@@ -578,6 +602,7 @@ const PROJECTS = [
     desc:    "An empirical study applying Shannon entropy to Git commit histories across Flask, Django, and CPython (171,881 commits, 15+ years). The original hypothesis — that entropy spikes predict release events — failed honest validation: leave-one-repo-out cross-validation gave AUC 0.47. But the analysis surfaced a strong, robust relationship between commit volume and entropy (Spearman r = 0.817), and the project was rewritten as a transparent negative-result study with a real finding. Doing the validation properly was the point.",
     tags:    ["Python", "Information Theory", "Shannon Entropy", "Data Science"],
     github:  "https://github.com/tanistheta/enthropic-fingerprint",
+    live:    null,
   },
    /*{
     name:    "Bias-Aware ML Pipeline",
@@ -621,12 +646,13 @@ const FULL_BIO = {
 
 const SKILLS = {
   h: "What I work with.",
-  p: "From raw commit logs to defensible statistics — comfortable across the full cycle from problem to validated result.",
+  p: "From raw commit logs to defensible statistics to the infrastructure that serves them — comfortable across the full cycle from problem to validated, deployed result.",
   groups: [
     { name: "Languages",        items: ["Python", "C++", "SQL"] },
-    { name: "Research & Stats", items: ["pandas", "statsmodels", "Difference-in-Differences", "Cross-validation", "scikit-learn"] },
-    { name: "Core CS",          items: ["DSA", "STL", "Git", "Algorithms"] },
-    { name: "Currently",        items: ["Causal Inference", "Mining Software Repositories"] },
+    { name: "ML / Research",    items: ["CLIP", "UMAP", "scikit-learn", "pandas", "statsmodels", "Difference-in-Differences", "Cross-validation"] },
+    { name: "Infra & Deployment", items: ["FastAPI", "Docker", "Google Cloud Platform", "Linux", "Git"] },
+    { name: "Core CS",          items: ["DSA", "STL", "Algorithms"] },
+    { name: "Currently",        items: ["Causal Inference", "Mining Software Repositories", "CI/CD"] },
   ],
 };
 
@@ -637,6 +663,7 @@ const FACTS = [
   { type:"fact", emoji:"🤖", text:"Copilot's fingerprint in open source: existing contributors started making smaller, more atomic commits. New devs didn't cause it." },
   { type:"fact", emoji:"🕰️", text:"171,881 commits across Flask, Django, and CPython - 15+ years of developer behavior, read like a dataset." },
   { type:"fact", emoji:"🧮", text:"Shannon defined entropy in 1948. Git shipped in 2005. Pointing one at the other is the whole project." },
+  { type:"fact", emoji:"☁️", text:"Kansei runs two Dockerized services on a free-tier GCP VM with 964MB of RAM - on purpose, not by budget." },
 ];
 
 /*clock*/
@@ -814,6 +841,15 @@ function openProjectDetail(i){
   document.getElementById('pd-desc').textContent = p.desc;
   document.getElementById('pd-tags').innerHTML = p.tags.map(t => `<span class="proj-tag">${t}</span>`).join('');
   document.getElementById('pd-ghbtn').href = p.github;
+
+  const liveBtn = document.getElementById('pd-livebtn');
+  if (p.live) {
+    liveBtn.href = p.live;
+    liveBtn.style.display = 'inline-flex';
+  } else {
+    liveBtn.style.display = 'none';
+  }
+
   closeOverlay('projects-overlay');
   openOverlay('proj-detail-overlay');
 }
