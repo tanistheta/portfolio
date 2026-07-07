@@ -64,6 +64,7 @@
     --shadow-hard-lg: 7px 7px 0 rgba(0,0,0,.18);
   }
   html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); font-family:'Space Mono',monospace; color:var(--text); }
+  /* selection is only disabled on draggable chrome — modal/body text stays copyable */
   .folder, .name-tile, .dock, .taskbar, .captcha-box, .spotify-bar, .splash { user-select:none; -webkit-user-select:none; }
 
   .scanlines { position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.018) 2px,rgba(0,0,0,0.018) 4px); pointer-events:none; z-index:9000; }
@@ -318,11 +319,7 @@
   .skill-group-name { font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
   .skill-row { display:flex; flex-wrap:wrap; gap:6px; }
 
-<<<<<<< HEAD
   /*open source dialog*/
-=======
-  /*open source / pydriller dialog*/
->>>>>>> a459cd07fe62b8d0b06cb3bb65060a2d78a828fc
   .oss-modal { width: 560px; }
   .oss-modal .modal-body { padding: 26px; }
   .oss-head { margin-bottom: 18px; }
@@ -335,10 +332,7 @@
   .oss-item:last-child { margin-bottom: 0; }
   .oss-item-top { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:8px; flex-wrap:wrap; }
   .oss-item-title { font-family:'Syne',sans-serif; font-size:14px; font-weight:800; letter-spacing:-.01em; }
-<<<<<<< HEAD
   .oss-item-repo { font-size:10px; color:var(--muted); letter-spacing:.05em; text-transform:uppercase; font-weight:700; display:block; margin-bottom:3px; }
-=======
->>>>>>> a459cd07fe62b8d0b06cb3bb65060a2d78a828fc
   .oss-pill { font-size:9px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; padding:3px 8px; border-radius:2px; flex-shrink:0; white-space:nowrap; }
   .oss-pill.merged { background:#2da44e; color:#fff; }
   .oss-pill.reported { background:#9a6700; color:#fff; }
@@ -348,7 +342,6 @@
   .oss-skills { margin-top:18px; }
   .oss-skills-label { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
 
-<<<<<<< HEAD
   /*list view: the crawl-friendly, recruiter-friendly plain rendering of everything*/
   .listview {
     position:fixed; inset:0; z-index:850; background:var(--bg);
@@ -382,8 +375,6 @@
   .lv-plain a { color:var(--blue2); font-weight:700; text-decoration:none; }
   .lv-plain a:hover { text-decoration:underline; }
 
-=======
->>>>>>> a459cd07fe62b8d0b06cb3bb65060a2d78a828fc
   /*name titles*/
   .name-tile {
     position: fixed; width: 52px; height: 52px; cursor: grab; z-index: 300;
@@ -431,10 +422,7 @@
     .spotify-widget { display:none; }
     .spotify-embed:not(.collapsed) { height:152px; }
     .folder-modal, .projects-modal, .proj-dialog, .bio-modal, .oss-modal { width:100%; }
-<<<<<<< HEAD
     .lv-inner { padding:52px 16px 70px; }
-=======
->>>>>>> a459cd07fe62b8d0b06cb3bb65060a2d78a828fc
   }
 </style>
 </head>
@@ -492,11 +480,7 @@
 
   <div class="folder" style="top:55%; right:31%" tabindex="0" role="button" aria-label="Open Source" onclick="openOpenSource()">
     <svg viewBox="0 0 56 48" fill="none" aria-hidden="true"><rect x="0" y="10" width="56" height="36" rx="3" fill="#9ED6C8"/><path d="M0 15C0 12.2 2.2 10 5 10H22L27 5H52C54.8 5 56 7.2 56 10V15H0Z" fill="#7CBBAC"/><text x="28" y="36" text-anchor="middle" fill="white" font-size="14" opacity=".85" font-family="monospace">git</text></svg>
-<<<<<<< HEAD
     <span class="folder-label">Open Source</span><span class="folder-sub">4 merged PRs</span>
-=======
-    <span class="folder-label">Open Source</span><span class="folder-sub">pydriller/</span>
->>>>>>> a459cd07fe62b8d0b06cb3bb65060a2d78a828fc
   </div>
 
   <!-- captcha -->
@@ -685,24 +669,15 @@
   </div>
 </div>
 
-<<<<<<< HEAD
 <!-- open source overlay -->
 <div class="overlay" id="opensource-overlay" onclick="closeOverlay('opensource-overlay',event)">
   <div class="modal oss-modal" role="dialog" aria-modal="true" aria-label="Open Source Contributions" onclick="event.stopPropagation()">
     <div class="modal-bar">
       <span class="modal-bar-title">Open Source — Merged Contributions</span>
-=======
-<!-- open source / pydriller overlay -->
-<div class="overlay" id="opensource-overlay" onclick="closeOverlay('opensource-overlay',event)">
-  <div class="modal oss-modal" role="dialog" aria-modal="true" aria-label="Open Source Contribution" onclick="event.stopPropagation()">
-    <div class="modal-bar">
-      <span class="modal-bar-title">Open Source — PyDriller</span>
->>>>>>> a459cd07fe62b8d0b06cb3bb65060a2d78a828fc
       <button class="modal-x" aria-label="Close" onclick="closeOverlay('opensource-overlay')">✕</button>
     </div>
     <div class="modal-body">
       <div class="oss-head">
-<<<<<<< HEAD
         <h3>Open Source Contributions</h3>
         <div class="oss-stat-row">
           <span class="oss-stat">4 merged PRs</span>
@@ -710,22 +685,10 @@
           <span class="oss-stat">every PR ships with tests</span>
         </div>
         <p>Four merged pull requests across three widely-used Python libraries, plus a documented investigation of a maintainer-flagged open bug.</p>
-=======
-        <h3>Open Source Contribution — PyDriller</h3>
-        <span class="oss-repo-link">
-          <a href="https://github.com/ishepard/pydriller" target="_blank" rel="noopener">github.com/ishepard/pydriller</a>
-        </span>
-        <div class="oss-stat-row">
-          <span class="oss-stat">962★</span>
-          <span class="oss-stat">cited in ACM ESEC/FSE 2018</span>
-        </div>
-        <p>Contributed two merged-quality pull requests to PyDriller, a widely-used Python framework for mining software repositories.</p>
->>>>>>> a459cd07fe62b8d0b06cb3bb65060a2d78a828fc
       </div>
 
       <div class="oss-item">
         <div class="oss-item-top">
-<<<<<<< HEAD
           <div>
             <span class="oss-item-repo">pandas — pandas-dev/pandas</span>
             <span class="oss-item-title">Fixed a negative-slice indexer bug</span>
@@ -763,20 +726,12 @@
         <p>
           <a href="https://github.com/ishepard/pydriller/pull/320" target="_blank" rel="noopener">PR #320</a>
           (closing <a href="https://github.com/ishepard/pydriller/issues/317" target="_blank" rel="noopener">#317</a>) —
-=======
-          <span class="oss-item-title">Fixed a confirmed data-correctness bug</span>
-          <span class="oss-pill merged">Merged</span>
-        </div>
-        <p>
-          <a href="https://github.com/ishepard/pydriller/issues/317" target="_blank" rel="noopener">#317</a> —
->>>>>>> a459cd07fe62b8d0b06cb3bb65060a2d78a828fc
           <code>skip_whitespaces</code> was respected when reading per-file diffs, but silently ignored when computing commit-level insertion/deletion counts, producing inconsistent numbers for the same commit depending on which API was called. Traced the bug to two git subprocess calls missing the relevant flag, fixed both, and added a regression test reusing the project's existing fixture infrastructure.
         </p>
       </div>
 
       <div class="oss-item">
         <div class="oss-item-top">
-<<<<<<< HEAD
           <div>
             <span class="oss-item-repo">PyDriller — ishepard/pydriller</span>
             <span class="oss-item-title">Designed and shipped a new public API</span>
@@ -786,27 +741,16 @@
         <p>
           <a href="https://github.com/ishepard/pydriller/pull/321" target="_blank" rel="noopener">PR #321</a>
           (closing <a href="https://github.com/ishepard/pydriller/issues/226" target="_blank" rel="noopener">#226</a>) —
-=======
-          <span class="oss-item-title">Designed and shipped a new public API</span>
-          <span class="oss-pill merged">Merged</span>
-        </div>
-        <p>
-          <a href="https://github.com/ishepard/pydriller/issues/226" target="_blank" rel="noopener">#226</a> —
->>>>>>> a459cd07fe62b8d0b06cb3bb65060a2d78a828fc
           added <code>Commit.patch</code>, returning the full unified diff of a commit, closing a two-year-old feature request. Rather than reconstructing git's patch-header format manually, delegated directly to git itself, then stress-tested the implementation against root commits, normal commits, and merge commits before writing a single line into the main codebase.
         </p>
       </div>
 
       <div class="oss-item">
         <div class="oss-item-top">
-<<<<<<< HEAD
           <div>
             <span class="oss-item-repo">PyDriller — ishepard/pydriller</span>
             <span class="oss-item-title">Investigated and reported a separate, harder bug</span>
           </div>
-=======
-          <span class="oss-item-title">Investigated and reported a separate, harder bug</span>
->>>>>>> a459cd07fe62b8d0b06cb3bb65060a2d78a828fc
           <span class="oss-pill reported">Reported · open since 2023</span>
         </div>
         <p>
@@ -931,18 +875,6 @@ const PROJECTS = [
     ],
   },
   {
-    name:    "Ikiru",
-    image:   null,
-    imageAlt: "",
-    lang:    "Python",
-    meta:    "89 repos · ~21TB GH Archive via BigQuery · staggered-adoption DiD",
-    finding: "Key finding: null through ~18 months, with a cohort-confounded signal at months 23–24",
-    desc:    "Does adding a CODEOWNERS file causally change how fast pull requests get reviewed? A staggered-adoption difference-in-differences study (Sun-Abraham estimator) on an 89-repo panel built from ~21TB of GH Archive data pulled via Google BigQuery, with repository and calendar-time fixed effects and standard errors clustered at the repo level. The headline result is a clean null on PR closing time through roughly 18 months post-adoption — CODEOWNERS doesn't move review speed in the window most studies look at. Two coefficients turn significant at months 23–24, but that signal was diagnosed rather than reported at face value: with the panel's data cutoff, only 17 of 28 treated repos can even reach that horizon, and without a later-adopting comparison cohort at the same horizon, fixed effects can't separate genuine treatment effect from cohort maturation — so it's documented as confounded, not claimed as a finding. A follow-up CODEOWNERS coverage-heterogeneity check (parsing CODEOWNERS files at treatment-date commits across all 28 treated repos) surfaced a bimodal split — 14 repos at ≤10% file coverage, 8 at ≥90% — and the high-coverage subset alone shows a parallel-trends violation, pointing to coverage as a likely moderator the null result was masking. The project also identified and incorporated a directly competing paper (Lulla, Kula & Treude, 2025) discovered mid-analysis, repositioning the 18–24 month window as a result the competing paper's fixed RDD window structurally cannot observe at all. Includes a placebo test, a balance check on dropped low-activity controls, and a fully reproducible pipeline (BigQuery pull → panel construction → event-study regression → robustness checks).",
-    tags:    ["Python", "Causal Inference", "Sun-Abraham DiD", "BigQuery", "MSR", "statsmodels"],
-    github:  "https://github.com/tanistheta/ikiru",
-    live:    null,
-  },
-  {
     name:    "Entropic Fingerprint",
     image:   "figures/entropy-volume.png",
     imageAlt: "Scatter plot of commit volume vs entropy, Spearman r = 0.817",
@@ -1015,7 +947,6 @@ const SKILLS = {
 };
 
 const FACTS = [
-<<<<<<< HEAD
   { emoji:"📊", text:"638,000+ commits were analyzed for Sekivara — including llvm-project. You just clicked through faster than any of them merged." },
   { emoji:"🎲", text:"AUC 0.47 - worse than a coin flip. That number is on this site on purpose. Honest validation beats an impressive claim." },
   { emoji:"📈", text:"Spearman r = 0.817. Delete the hypothesis, keep the data, and sometimes a real finding is hiding underneath." },
@@ -1025,16 +956,6 @@ const FACTS = [
   { emoji:"☁️", text:"Kansei runs two Dockerized services on a free-tier GCP VM with 964MB of RAM - on purpose, not by budget." },
   { emoji:"🗂️", text:"Ikiru pulled ~21TB through BigQuery to test one governance file. The answer through 18 months: it doesn't move review speed." },
   { emoji:"⚡", text:"raft-kv replays any consensus bug byte-for-byte from a single seed. Heisenbugs hate this one trick: deterministic simulation." },
-=======
-  { type:"fact", emoji:"📊", text:"403,112 commits were analyzed for Sekivara. You just clicked through faster than any of them merged." },
-  { type:"fact", emoji:"🎲", text:"AUC 0.47 - worse than a coin flip. That number is on this site on purpose. Honest validation beats an impressive claim." },
-  { type:"fact", emoji:"📈", text:"Spearman r = 0.817. Delete the hypothesis, keep the data, and sometimes a real finding is hiding underneath." },
-  { type:"fact", emoji:"🤖", text:"Copilot's fingerprint in open source: existing contributors started making smaller, more atomic commits. New devs didn't cause it." },
-  { type:"fact", emoji:"🕰️", text:"171,881 commits across Flask, Django, and CPython - 15+ years of developer behavior, read like a dataset." },
-  { type:"fact", emoji:"🧮", text:"Shannon defined entropy in 1948. Git shipped in 2005. Pointing one at the other is the whole project." },
-  { type:"fact", emoji:"☁️", text:"Kansei runs two Dockerized services on a free-tier GCP VM with 964MB of RAM - on purpose, not by budget." },
-  { type:"fact", emoji:"🗂️", text:"Ikiru pulled ~21TB through BigQuery to test one governance file. The answer through 18 months: it doesn't move review speed." },
->>>>>>> a459cd07fe62b8d0b06cb3bb65060a2d78a828fc
 ];
 
 /*clock*/
@@ -1379,7 +1300,7 @@ buildGrid();
 </div>
 
 <script>
-/* iframe loads lazily on first click - no auto-expand on page load */
+/* iframe loads lazily on first click — no auto-expand on page load */
 let spotifyLoaded = false;
 function toggleSpotify() {
   const embed = document.getElementById('spotify-embed');
