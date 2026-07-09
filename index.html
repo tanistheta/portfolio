@@ -64,7 +64,7 @@
     --shadow-hard-lg: 7px 7px 0 rgba(0,0,0,.18);
   }
   html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); font-family:'Space Mono',monospace; color:var(--text); }
-  /* selection is only disabled on draggable chrome — modal/body text stays copyable */
+  /* selection is only disabled on draggable chrome - modal/body text stays copyable */
   .folder, .name-tile, .dock, .taskbar, .captcha-box, .spotify-bar, .splash { user-select:none; -webkit-user-select:none; }
 
   .scanlines { position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.018) 2px,rgba(0,0,0,0.018) 4px); pointer-events:none; z-index:9000; }
@@ -98,8 +98,10 @@
     letter-spacing: 0.04em;
     display: flex; align-items: center; gap: 14px;
   }
-  .taskbar-listview {
-    background: none; border: 1px solid rgba(30,30,30,0.3); border-radius: 2px;
+  .taskbar-ach { opacity:1; transition:opacity .35s ease; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:340px; }
+  .taskbar-ach.fading { opacity:0; }
+  .taskbar-ach b { color:var(--dark); font-weight:700; }
+  .taskbar-listview {     background: none; border: 1px solid rgba(30,30,30,0.3); border-radius: 2px;
     font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
     letter-spacing: .06em; color: rgba(30,30,30,0.7); padding: 3px 9px;
     cursor: pointer; text-transform: uppercase; transition: background .15s, color .15s;
@@ -124,6 +126,20 @@
   .folder-sub { font-size:10px; color:var(--muted); text-align:center; margin-top:-2px; }
   .folder.pulse { animation:fpulse .45s ease; }
   @keyframes fpulse { 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.15) drop-shadow(0 4px 8px rgba(0,0,0,.18))} }
+
+  /* idle float - staggered so icons breathe out of sync */
+  @keyframes idle-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  .folder { animation:idle-float 4.2s ease-in-out infinite; }
+  .folder:nth-of-type(2n) { animation-duration:5.1s; animation-delay:-1.3s; }
+  .folder:nth-of-type(3n) { animation-duration:4.6s; animation-delay:-2.4s; }
+  .folder:nth-of-type(5n) { animation-duration:5.6s; animation-delay:-.8s; }
+  .folder:hover, .folder:focus-visible { animation-play-state:paused; }
+  .folder.dragging { animation:none; }
+  .name-tile { animation:idle-float 5.4s ease-in-out infinite; }
+  .name-tile:nth-of-type(2n) { animation-duration:4.4s; animation-delay:-1.7s; }
+  .name-tile:nth-of-type(3n) { animation-duration:6.1s; animation-delay:-3.1s; }
+  .name-tile:hover { animation-play-state:paused; }
+  .name-tile.dragging { animation:none; }
 
   .captcha-wrapper { position:absolute; top:calc(40% - 172px); left:calc(50% - 172px); z-index:100; touch-action:none; }
   .captcha-box { width:344px; background:#fff; border:1px solid #c0c0c0; border-radius:3px; box-shadow:var(--shadow-hard), 10px 10px 0 rgba(0,0,0,.06); overflow:hidden; }
@@ -163,9 +179,17 @@
 
   /*modals*/
   .overlay { position:fixed; inset:0; background:rgba(20,18,14,.5); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px); z-index:700; display:none; align-items:center; justify-content:center; padding:16px; }
-  .overlay.open { display:flex; }
-  .overlay.open .modal { animation:modal-pop .24s cubic-bezier(.34,1.45,.64,1); }
-  @keyframes modal-pop { from{transform:translateY(14px) scale(.96);opacity:0} to{transform:none;opacity:1} }
+  .overlay.open { display:flex; animation:overlay-in .2s ease; }
+  .overlay.open .modal { animation:modal-pop .26s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes modal-pop { from{transform:translateY(18px) scale(.92);opacity:0} to{transform:none;opacity:1} }
+  @keyframes overlay-in { from{opacity:0} to{opacity:1} }
+  /* exit: symmetric to entry so modals leave the way they arrived */
+  .overlay.open.closing { animation:overlay-out .17s ease forwards; }
+  .overlay.open.closing .modal { animation:modal-out .17s ease forwards; }
+  @keyframes modal-out { from{transform:none;opacity:1} to{transform:translateY(10px) scale(.95);opacity:0} }
+  @keyframes overlay-out { from{opacity:1} to{opacity:0} }
+  .fact-overlay.open.closing { animation:overlay-out .17s ease forwards; }
+  .fact-overlay.open.closing .fact-box { animation:modal-out .17s ease forwards; }
 
   .modal { background:var(--surface); border:1.5px solid var(--dark2); border-radius:4px; box-shadow:var(--shadow-hard-lg); overflow:hidden; max-width:100%; max-height:calc(100vh - 100px); display:flex; flex-direction:column; }
   .modal-bar { background:var(--dark2); padding:10px 14px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
@@ -401,6 +425,10 @@
   }
   .psst.fade { opacity:0; }
 
+  .paw-print { position:fixed; width:22px; height:22px; pointer-events:none; z-index:9400; animation:paw-print-fade .6s ease-out forwards; }
+  .paw-fill { fill:#1e1e1e; }
+  @keyframes paw-print-fade { 0%{opacity:.5; transform:scale(.8) rotate(var(--pr,0deg))} 100%{opacity:0; transform:scale(1.2) rotate(var(--pr,0deg))} }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   }
@@ -413,12 +441,13 @@
       display:flex; flex-direction:column; align-items:center; gap:8px;
       padding:52px 16px 80px;
     }
-    .captcha-wrapper { position:static !important; order:-1; margin:8px auto 18px; }
+    .captcha-wrapper { position:static !important; order:99; margin:18px auto 10px; }
     .captcha-box { width:min(344px, 100%); }
     .folder { position:static !important; cursor:pointer; }
     .desktop { flex-flow:row wrap; justify-content:center; align-content:flex-start; }
     .captcha-wrapper { flex-basis:100%; display:flex; justify-content:center; }
     .name-tile, .hint, .psst { display:none; }
+    .taskbar-ach { display:none; }
     .spotify-widget { display:none; }
     .spotify-embed:not(.collapsed) { height:152px; }
     .folder-modal, .projects-modal, .proj-dialog, .bio-modal, .oss-modal { width:100%; }
@@ -434,13 +463,14 @@
     <h1>Tanishk Gangwar (tanistheta)</h1>
     <p>CSE (Data Science) undergraduate at Manipal University Jaipur (CGPA 9.00/10) doing empirical software engineering research: causal inference on GitHub Copilot's behavioral fingerprint (Sekivara, 638,000+ commits), a staggered-adoption DiD study of CODEOWNERS (Ikiru, ~21TB via BigQuery), and Raft consensus in Go with deterministic simulation testing (raft-kv). Four merged OSS pull requests across pandas, PyDriller, and PyGithub.</p>
     <p>GitHub: <a href="https://github.com/tanistheta">github.com/tanistheta</a> · LinkedIn: <a href="https://www.linkedin.com/in/tanishk-gangwar-809614363/">linkedin.com/in/tanishk-gangwar</a> · Email: <a href="mailto:tanishk7531@gmail.com">tanishk7531@gmail.com</a> · <a href="TanishkGangwar_resume.pdf">Resume (PDF)</a></p>
-    <p>This site is interactive and needs JavaScript — enable it for the full desktop experience.</p>
+    <p>This site is interactive and needs JavaScript - enable it for the full desktop experience.</p>
   </div>
 </noscript>
 
 <div class="taskbar">
   <span class="taskbar-brand">Tanistheta</span>
   <div class="taskbar-right">
+    <span class="taskbar-ach" id="taskbar-ach" aria-live="off"></span>
     <button class="taskbar-listview" onclick="openListView()" aria-label="Switch to list view">List view</button>
     <span id="clock"></span>
   </div>
@@ -513,7 +543,7 @@
 
 </div>
 
-<div class="hint" id="hint">click folders to explore · select images that you like · verify to enter</div>
+<div class="hint" id="hint">click folders to explore · the captcha is just for fun, try it 🐾</div>
 
 <div class="dock">
   <!-- GitHub -->
@@ -673,7 +703,7 @@
 <div class="overlay" id="opensource-overlay" onclick="closeOverlay('opensource-overlay',event)">
   <div class="modal oss-modal" role="dialog" aria-modal="true" aria-label="Open Source Contributions" onclick="event.stopPropagation()">
     <div class="modal-bar">
-      <span class="modal-bar-title">Open Source — Merged Contributions</span>
+      <span class="modal-bar-title">Open Source - Merged Contributions</span>
       <button class="modal-x" aria-label="Close" onclick="closeOverlay('opensource-overlay')">✕</button>
     </div>
     <div class="modal-body">
@@ -690,13 +720,13 @@
       <div class="oss-item">
         <div class="oss-item-top">
           <div>
-            <span class="oss-item-repo">pandas — pandas-dev/pandas</span>
+            <span class="oss-item-repo">pandas - pandas-dev/pandas</span>
             <span class="oss-item-title">Fixed a negative-slice indexer bug</span>
           </div>
           <span class="oss-pill merged">Merged</span>
         </div>
         <p>
-          <a href="https://github.com/pandas-dev/pandas/pull/66101" target="_blank" rel="noopener">PR #66101</a> —
+          <a href="https://github.com/pandas-dev/pandas/pull/66101" target="_blank" rel="noopener">PR #66101</a> -
           fixed an indexing bug where negative-slice indexers produced incorrect results, in the most widely-used data library in the Python ecosystem. Shipped with a regression test following the project's contribution and testing conventions.
         </p>
       </div>
@@ -704,13 +734,13 @@
       <div class="oss-item">
         <div class="oss-item-top">
           <div>
-            <span class="oss-item-repo">PyGithub — PyGithub/PyGithub</span>
+            <span class="oss-item-repo">PyGithub - PyGithub/PyGithub</span>
             <span class="oss-item-title">Configurable rate-limit retry cap</span>
           </div>
           <span class="oss-pill merged">Merged</span>
         </div>
         <p>
-          <a href="https://github.com/PyGithub/PyGithub/pull/3540" target="_blank" rel="noopener">PR #3540</a> —
+          <a href="https://github.com/PyGithub/PyGithub/pull/3540" target="_blank" rel="noopener">PR #3540</a> -
           added a configurable cap on rate-limit retries, so long-running GitHub API jobs (like repository-mining pipelines) can fail fast instead of blocking indefinitely when they hit the API rate limit.
         </p>
       </div>
@@ -718,14 +748,14 @@
       <div class="oss-item">
         <div class="oss-item-top">
           <div>
-            <span class="oss-item-repo">PyDriller — ishepard/pydriller</span>
+            <span class="oss-item-repo">PyDriller - ishepard/pydriller</span>
             <span class="oss-item-title">Fixed a confirmed data-correctness bug</span>
           </div>
           <span class="oss-pill merged">Merged</span>
         </div>
         <p>
           <a href="https://github.com/ishepard/pydriller/pull/320" target="_blank" rel="noopener">PR #320</a>
-          (closing <a href="https://github.com/ishepard/pydriller/issues/317" target="_blank" rel="noopener">#317</a>) —
+          (closing <a href="https://github.com/ishepard/pydriller/issues/317" target="_blank" rel="noopener">#317</a>) -
           <code>skip_whitespaces</code> was respected when reading per-file diffs, but silently ignored when computing commit-level insertion/deletion counts, producing inconsistent numbers for the same commit depending on which API was called. Traced the bug to two git subprocess calls missing the relevant flag, fixed both, and added a regression test reusing the project's existing fixture infrastructure.
         </p>
       </div>
@@ -733,14 +763,14 @@
       <div class="oss-item">
         <div class="oss-item-top">
           <div>
-            <span class="oss-item-repo">PyDriller — ishepard/pydriller</span>
+            <span class="oss-item-repo">PyDriller - ishepard/pydriller</span>
             <span class="oss-item-title">Designed and shipped a new public API</span>
           </div>
           <span class="oss-pill merged">Merged</span>
         </div>
         <p>
           <a href="https://github.com/ishepard/pydriller/pull/321" target="_blank" rel="noopener">PR #321</a>
-          (closing <a href="https://github.com/ishepard/pydriller/issues/226" target="_blank" rel="noopener">#226</a>) —
+          (closing <a href="https://github.com/ishepard/pydriller/issues/226" target="_blank" rel="noopener">#226</a>) -
           added <code>Commit.patch</code>, returning the full unified diff of a commit, closing a two-year-old feature request. Rather than reconstructing git's patch-header format manually, delegated directly to git itself, then stress-tested the implementation against root commits, normal commits, and merge commits before writing a single line into the main codebase.
         </p>
       </div>
@@ -748,14 +778,14 @@
       <div class="oss-item">
         <div class="oss-item-top">
           <div>
-            <span class="oss-item-repo">PyDriller — ishepard/pydriller</span>
+            <span class="oss-item-repo">PyDriller - ishepard/pydriller</span>
             <span class="oss-item-title">Investigated and reported a separate, harder bug</span>
           </div>
           <span class="oss-pill reported">Reported · open since 2023</span>
         </div>
         <p>
-          <a href="https://github.com/ishepard/pydriller/issues/283" target="_blank" rel="noopener">#283</a> —
-          the maintainer had flagged this as unsolved: commit objects lose access to their stats after being collected into a list, due to a context-manager lifecycle issue. The obvious fix — falling back to the commit's own internal git reference — appeared to work in local testing. Pushing further, tested it against a remote, cloned repository and found it only succeeded due to a Windows-specific quirk where deleted files' handles stay briefly readable; the same fix would likely fail unpredictably on Linux CI or under different timing. Reported the finding with full reasoning and evidence rather than submitting a fix that couldn't be fully stood behind.
+          <a href="https://github.com/ishepard/pydriller/issues/283" target="_blank" rel="noopener">#283</a> -
+          the maintainer had flagged this as unsolved: commit objects lose access to their stats after being collected into a list, due to a context-manager lifecycle issue. The obvious fix - falling back to the commit's own internal git reference - appeared to work in local testing. Pushing further, tested it against a remote, cloned repository and found it only succeeded due to a Windows-specific quirk where deleted files' handles stay briefly readable; the same fix would likely fail unpredictably on Linux CI or under different timing. Reported the finding with full reasoning and evidence rather than submitting a fix that couldn't be fully stood behind.
         </p>
       </div>
 
@@ -824,7 +854,7 @@ const PROJECTS = [
     lang:    "Go",
     meta:    "Raft consensus · deterministic simulation testing",
     finding: "Key result: consensus bugs replay byte-for-byte from a single seed",
-    desc:    "A from-scratch implementation of the Raft consensus protocol in Go, built around deterministic simulation testing: a virtual-time scheduler owns all message delivery, timers, and randomness, so any failing test — leader-election races, split votes, injected faults — reproduces identically from a seed. The approach has already paid for itself: it surfaced and fixed two latent correctness bugs (a node granting a vote without resetting its election timer, and a candidate ignoring a same-term leader's heartbeat) plus a split-vote livelock caused by a degenerate RNG stub. Scheduler-driven fault injection with virtual message delays is in; network partition testing is the next milestone.",
+    desc:    "A from-scratch implementation of the Raft consensus protocol in Go, built around deterministic simulation testing: a virtual-time scheduler owns all message delivery, timers, and randomness, so any failing test - leader-election races, split votes, injected faults - reproduces identically from a seed. The approach has already paid for itself: it surfaced and fixed two latent correctness bugs (a node granting a vote without resetting its election timer, and a candidate ignoring a same-term leader's heartbeat) plus a split-vote livelock caused by a degenerate RNG stub. Scheduler-driven fault injection is in - drop, delay, and network partitions - with six deterministic scenarios passing, including partition majority/minority and lossy-network cases; real log replication (AppendEntries) is the next milestone.",
     tags:    ["Go", "Distributed Systems", "Raft", "Deterministic Simulation Testing"],
     github:  "https://github.com/tanistheta/raft-kv",
     live:    null,
@@ -837,7 +867,7 @@ const PROJECTS = [
     lang:    "Python",
     meta:    "10 repos · 638k+ commits · causal inference",
     finding: "Key finding: Copilot adoption → smaller, more atomic commits",
-    desc:    "A quasi-experimental difference-in-differences study asking whether GitHub Copilot left a measurable behavioral fingerprint in open-source development. Analyzed 638,000+ commits across 10 major repositories — including llvm-project — with HC3 robust standard errors, an event-study design, and a formal joint pre-trend F-test that passed cleanly on all four headline features. Treated repos shifted significantly toward smaller, more atomic commits post-Copilot, and the effect was driven by existing contributors changing how they work, not by an influx of new ones. Full methodology and robustness checks are in the repository README.",
+    desc:    "A quasi-experimental difference-in-differences study asking whether GitHub Copilot left a measurable behavioral fingerprint in open-source development. Analyzed 638,000+ commits across 10 major repositories - including llvm-project - with HC3 robust standard errors, an event-study design, and a formal joint pre-trend F-test that passed cleanly on all four headline features. Treated repos shifted significantly toward smaller, more atomic commits post-Copilot, and the effect was driven by existing contributors changing how they work, not by an influx of new ones. Full methodology and robustness checks are in the repository README.",
     tags:    ["Python", "Causal Inference", "DiD", "MSR", "statsmodels"],
     github:  "https://github.com/tanistheta/sekivara",
     live:    null,
@@ -852,7 +882,7 @@ const PROJECTS = [
     imageAlt: "",
     lang:    "Python",
     meta:    "CLIP + UMAP · self-hosted on GCP",
-    finding: "Key result: a self-hosted ML system, end to end — model, infra, and constraint",
+    finding: "Key result: a self-hosted ML system, end to end - model, infra, and constraint",
     desc:    "Can a machine read taste? A 25-round image-comparison quiz that encodes each choice as a CLIP ViT-B/32 embedding, scores it against 16 hand-curated aesthetic centroids by cosine similarity, and maps the result in a 3D UMAP projection with nearest-image retrieval. The infrastructure was the hard part: two Dockerized services running on a free-tier GCP VM with 964MB of RAM, a Docker image cut from 9.2GB to 1.62GB by fixing a pip dependency-resolution bug, free HTTPS on a real domain, zero ongoing cost. The full build story lives in the README.",
     tags:    ["Python", "CLIP", "UMAP", "FastAPI", "Docker", "GCP", "scikit-learn"],
     github:  "https://github.com/tanistheta/kansei",
@@ -865,8 +895,8 @@ const PROJECTS = [
     imageAlt: "",
     lang:    "Python",
     meta:    "89 repos · ~21TB GH Archive via BigQuery · staggered-adoption DiD",
-    finding: "Key finding: a clean null through ~18 months — and a late signal diagnosed, not oversold",
-    desc:    "Does adding a CODEOWNERS file causally change how fast pull requests get reviewed? A staggered-adoption difference-in-differences study (Sun-Abraham estimator) on an 89-repo panel built from ~21TB of GH Archive data via BigQuery. The headline result is a clean null on PR closing time through roughly 18 months post-adoption. A significant signal at months 23–24 was diagnosed as cohort-confounded rather than reported at face value, and a follow-up coverage check surfaced a bimodal split — 14 repos at ≤10% file coverage, 8 at ≥90% — pointing to coverage as a likely moderator hiding under the null. Placebo test, balance checks, and the fully reproducible pipeline are documented in the repository.",
+    finding: "Key finding: a clean null through ~18 months - and a late signal diagnosed, not oversold",
+    desc:    "Does adding a CODEOWNERS file causally change how fast pull requests get reviewed? A staggered-adoption difference-in-differences study (Sun-Abraham estimator) on an 89-repo panel built from ~21TB of GH Archive data via BigQuery. The headline result is a clean null on PR closing time through roughly 18 months post-adoption. A significant signal at months 23–24 was diagnosed as cohort-confounded rather than reported at face value, and a follow-up coverage check surfaced a bimodal split - 14 repos at ≤10% file coverage, 8 at ≥90% - pointing to coverage as a likely moderator hiding under the null. Placebo test, balance checks, and the fully reproducible pipeline are documented in the repository.",
     tags:    ["Python", "Causal Inference", "Sun-Abraham DiD", "BigQuery", "MSR", "statsmodels"],
     github:  "https://github.com/tanistheta/ikiru",
     live:    null,
@@ -881,7 +911,7 @@ const PROJECTS = [
     lang:    "Python",
     meta:    "3 repos · 171k commits · information theory",
     finding: "Key finding: commit volume ↔ entropy, Spearman r = 0.817",
-    desc:    "An empirical study applying Shannon entropy to Git commit histories across Flask, Django, and CPython (171,881 commits, 15+ years). The original hypothesis — that entropy spikes predict release events — failed honest validation: leave-one-repo-out cross-validation gave AUC 0.47. But the analysis surfaced a strong, robust relationship between commit volume and entropy (Spearman r = 0.817), and the project was rewritten as a transparent negative-result study with a real finding. Doing the validation properly was the point.",
+    desc:    "An empirical study applying Shannon entropy to Git commit histories across Flask, Django, and CPython (171,881 commits, 15+ years). The original hypothesis - that entropy spikes predict release events - failed honest validation: leave-one-repo-out cross-validation gave AUC 0.47. But the analysis surfaced a strong, robust relationship between commit volume and entropy (Spearman r = 0.817), and the project was rewritten as a transparent negative-result study with a real finding. Doing the validation properly was the point.",
     tags:    ["Python", "Information Theory", "Shannon Entropy", "Data Science"],
     github:  "https://github.com/tanistheta/enthropic-fingerprint",
     live:    null,
@@ -896,7 +926,7 @@ const PROJECTS = [
     lang:    "Python",
     meta:    "fairness auditing · 12 modules · research collaboration",
     finding: "Key finding: naive feature suppression performed worst of three mitigation strategies",
-    desc:    "A 12-module pipeline for fairness-aware machine learning on tabular datasets, built in research collaboration with Dr. Chirag Joshi. It audits model predictions for demographic bias and reports group-level fairness metrics alongside standard performance metrics, so disparities surface before deployment instead of after. Best mitigation run cut the Demographic Parity gap by 64.5% and the Equalized Odds TPR gap by 47.8% (Random Forest) — and the head-to-head comparison showed naive feature suppression performing worst of the three strategies tested.",
+    desc:    "A 12-module pipeline for fairness-aware machine learning on tabular datasets, built in research collaboration with Dr. Chirag Joshi. It audits model predictions for demographic bias and reports group-level fairness metrics alongside standard performance metrics, so disparities surface before deployment instead of after. Best mitigation run cut the Demographic Parity gap by 64.5% and the Equalized Odds TPR gap by 47.8% (Random Forest) - and the head-to-head comparison showed naive feature suppression performing worst of the three strategies tested.",
     tags:    ["Python", "ML Fairness", "scikit-learn"],
     github:  "https://github.com/tanistheta/bias_awareness",
     live:    null,
@@ -905,15 +935,15 @@ const PROJECTS = [
 ];
 
 const HIGHLIGHTS = [
-  { b: "Amazon ML Summer School", t: "selected — top ~2.2% of 134,421+ applicants" },
-  { b: "Google — The Big Code", t: "Top 1,500" },
+  { b: "Amazon ML Summer School", t: "selected - top ~2.2% of 134,421+ applicants" },
+  { b: "Google - The Big Code", t: "Top 1,500" },
   { b: "NTPC Limited", t: "Vocational Trainee, Advanced Pattern Recognition team" },
   { b: "Open source", t: "4 merged PRs across pandas, PyDriller, and PyGithub" },
 ];
 
 const ABOUT = {
   h: "Hey, I'm Tanishk.",
-  p: "3rd-year CSE (Data Science) student who treats Git history as a dataset. I do empirical software engineering research — causal inference, information theory, and the question of what code actually tells us about the people writing it. Currently a vocational trainee on NTPC's Advanced Pattern Recognition team.",
+  p: "3rd-year CSE (Data Science) student who treats Git history as a dataset. I do empirical software engineering research - causal inference, information theory, and the question of what code actually tells us about the people writing it. Currently a vocational trainee on NTPC's Advanced Pattern Recognition team.",
   tags: ["Empirical SE", "Causal Inference", "Distributed Systems", "Python", "Go", "C++"],
 };
 
@@ -926,8 +956,8 @@ const EDUCATION = {
 const FULL_BIO = {
   name:   "Tanishk Gangwar",
   photo:  "photo.jpeg",
-  bio1:   "I grew up across multiple cities, which taught me early on how to adapt, observe, and find patterns in unfamiliar places. Tech drew me in for the same reason — it sits at the intersection of logic and creativity, where a well-designed solution can be as elegant as anything artistic.",
-  bio2:   "Right now I'm focused on empirical software engineering research — causal inference on Copilot's behavioral fingerprint across 638k+ commits, a staggered-adoption study of CODEOWNERS on ~21TB of GH Archive data — plus building Raft consensus in Go with deterministic simulation testing. Along the way: selection into the Amazon ML Summer School (top ~2.2% of 134,421+ applicants), Top 1,500 in Google's The Big Code, and a vocational trainee role on NTPC's Advanced Pattern Recognition team. Long-term, I'm aiming at venues like MSR.",
+  bio1:   "I grew up across multiple cities, which taught me early on how to adapt, observe, and find patterns in unfamiliar places. Tech drew me in for the same reason - it sits at the intersection of logic and creativity, where a well-designed solution can be as elegant as anything artistic.",
+  bio2:   "Right now I'm focused on empirical software engineering research - causal inference on Copilot's behavioral fingerprint across 638k+ commits, a staggered-adoption study of CODEOWNERS on ~21TB of GH Archive data - plus building Raft consensus in Go with deterministic simulation testing. Along the way: selection into the Amazon ML Summer School (top ~2.2% of 134,421+ applicants), Top 1,500 in Google's The Big Code, and a vocational trainee role on NTPC's Advanced Pattern Recognition team. Long-term, I'm aiming at venues like MSR.",
   github: "https://github.com/tanistheta",
   linkedin: "https://www.linkedin.com/in/tanishk-gangwar-809614363/",
   email:  "tanishk7531@gmail.com",
@@ -935,7 +965,7 @@ const FULL_BIO = {
 
 const SKILLS = {
   h: "What I work with.",
-  p: "From raw commit logs to defensible statistics to the infrastructure that serves them — comfortable across the full cycle from problem to validated, deployed result.",
+  p: "From raw commit logs to defensible statistics to the infrastructure that serves them - comfortable across the full cycle from problem to validated, deployed result.",
   groups: [
     { name: "Languages",        items: ["Python", "Go", "C++", "SQL"] },
     { name: "ML / Research",    items: ["CLIP", "UMAP", "scikit-learn", "pandas", "statsmodels", "Difference-in-Differences", "Cross-validation"] },
@@ -947,7 +977,7 @@ const SKILLS = {
 };
 
 const FACTS = [
-  { emoji:"📊", text:"638,000+ commits were analyzed for Sekivara — including llvm-project. You just clicked through faster than any of them merged." },
+  { emoji:"📊", text:"638,000+ commits were analyzed for Sekivara - including llvm-project. You just clicked through faster than any of them merged." },
   { emoji:"🎲", text:"AUC 0.47 - worse than a coin flip. That number is on this site on purpose. Honest validation beats an impressive claim." },
   { emoji:"📈", text:"Spearman r = 0.817. Delete the hypothesis, keep the data, and sometimes a real finding is hiding underneath." },
   { emoji:"🤖", text:"Copilot's fingerprint in open source: existing contributors started making smaller, more atomic commits. New devs didn't cause it." },
@@ -958,9 +988,35 @@ const FACTS = [
   { emoji:"⚡", text:"raft-kv replays any consensus bug byte-for-byte from a single seed. Heisenbugs hate this one trick: deterministic simulation." },
 ];
 
+function track(name){
+  if(window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: name, title: name, event: true });
+}
+
 /*clock*/
 function tick(){ document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}); }
 tick(); setInterval(tick, 1000);
+
+/*taskbar achievements ticker - one stat at a time, like a system status area*/
+(function(){
+  const ACH = [
+    '<b>top 2.2%</b> · Amazon ML Summer School',
+    '<b>top 1,500</b> · Google, The Big Code',
+    '<b>4 merged PRs</b> · pandas / PyDriller / PyGithub',
+    '<b>638K+ commits</b> analyzed · Sekivara',
+  ];
+  const el = document.getElementById('taskbar-ach');
+  if(!el) return;
+  let i = 0;
+  el.innerHTML = ACH[0];
+  setInterval(() => {
+    el.classList.add('fading');
+    setTimeout(() => {
+      i = (i + 1) % ACH.length;
+      el.innerHTML = ACH[i];
+      el.classList.remove('fading');
+    }, 360);
+  }, 4200);
+})();
 
 /*captcha*/
 let order = [], chosen = new Set(), factsShown = 0, lastPick = 0;
@@ -985,6 +1041,7 @@ function buildGrid(){
 }
 
 function verify(){
+  track('captcha-verify');
   const btn = document.getElementById('verify-btn');
   if(chosen.size === 0){
     btn.textContent = 'SELECT SOME'; btn.classList.add('err');
@@ -1009,7 +1066,10 @@ function showFact() {
 }
 
 function closeFact() {
-  document.getElementById('fact-overlay').classList.remove('open');
+  const fo = document.getElementById('fact-overlay');
+  if(!fo.classList.contains('open') || fo.classList.contains('closing')) return;
+  fo.classList.add('closing');
+  setTimeout(() => { fo.classList.remove('open','closing'); }, 170);
   // splash copy reacts to how many images they picked
   const msg = document.getElementById('splash-msg');
   const sub = document.getElementById('splash-sub');
@@ -1029,7 +1089,7 @@ function closeFact() {
 
 function enterSite(){
   document.getElementById('splash').classList.remove('show');
-  document.getElementById('hint').textContent = 'verified ✓  —  explore the folders';
+  document.getElementById('hint').textContent = 'verified ✓  -  explore the folders';
   document.querySelectorAll('.folder').forEach(f => {
     f.classList.add('pulse');
     f.addEventListener('animationend', () => f.classList.remove('pulse'), { once: true });
@@ -1046,8 +1106,13 @@ function openOverlay(id){
 }
 function closeOverlay(id, e){
   if(!e || e.target === document.getElementById(id)){
-    document.getElementById(id).classList.remove('open');
-    if(lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+    const ov = document.getElementById(id);
+    if(!ov.classList.contains('open') || ov.classList.contains('closing')) return;
+    ov.classList.add('closing');
+    setTimeout(() => {
+      ov.classList.remove('open','closing');
+      if(lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+    }, 170);
   }
 }
 
@@ -1055,9 +1120,8 @@ function closeOverlay(id, e){
 document.addEventListener('keydown', e => {
   if(e.key === 'Escape'){
     if(document.getElementById('listview').classList.contains('open')){ closeListView(); return; }
-    document.querySelectorAll('.overlay.open').forEach(o => o.classList.remove('open'));
-    document.getElementById('fact-overlay').classList.remove('open');
-    if(lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+    document.querySelectorAll('.overlay.open:not(.closing)').forEach(o => closeOverlay(o.id));
+    if(document.getElementById('fact-overlay').classList.contains('open')) closeFact();
     return;
   }
   if(e.key !== 'Tab') return;
@@ -1082,18 +1146,20 @@ function showFolder(title, data, actions, extra){
 
 function highlightsHTML(){
   return `<div class="highlights">` + HIGHLIGHTS.map(h =>
-    `<div class="highlight"><span class="hl-dot"></span><span><b>${h.b}</b> — ${h.t}</span></div>`
+    `<div class="highlight"><span class="hl-dot"></span><span><b>${h.b}</b> - ${h.t}</span></div>`
   ).join('') + `</div>`;
 }
 
 function openAbout(){
+  track('folder-about');
   showFolder('About Me', ABOUT,
     `<button class="modal-action" onclick="openFullBio()">Read Full Bio →</button>`,
     highlightsHTML());
 }
-function openEducation(){ showFolder('Education', EDUCATION, ``); }
+function openEducation(){ track('folder-education'); showFolder('Education', EDUCATION, ``); }
 
 function openSkills(){
+  track('folder-skills');
   const extra = `<div class="skill-groups">` + SKILLS.groups.map(g => `
     <div>
       <div class="skill-group-name">${g.name}</div>
@@ -1103,6 +1169,7 @@ function openSkills(){
 }
 
 function downloadResume(){
+  track('resume-download');
   const a = document.createElement('a');
   a.href = 'TanishkGangwar_resume.pdf';
   a.download = 'TanishkGangwar_Resume.pdf';
@@ -1111,6 +1178,7 @@ function downloadResume(){
 
 /*folder opens the PDF in a new tab instead of force-downloading */
 function openResume(){
+  track('resume-open');
   window.open('TanishkGangwar_resume.pdf', '_blank', 'noopener');
   showFolder('Resume', {
     h: 'TanishkGangwar_Resume.pdf',
@@ -1120,6 +1188,7 @@ function openResume(){
 }
 
 function openProjects(){
+  track('folder-projects');
   const list = document.getElementById('file-list');
   list.innerHTML = PROJECTS.map((p, i) => `
     <li class="file-item" tabindex="0" role="button" aria-label="${p.name}" onclick="openProjectDetail(${i})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openProjectDetail(${i});}">
@@ -1133,6 +1202,7 @@ function openProjects(){
 
 function openProjectDetail(i){
   const p = PROJECTS[i];
+  track('project-' + p.name.toLowerCase().replace(/[^a-z0-9]+/g,'-'));
   document.getElementById('pd-title').textContent = p.name.toUpperCase();
   document.getElementById('pd-name').textContent = p.name;
   document.getElementById('pd-finding').textContent = p.finding || '';
@@ -1165,10 +1235,11 @@ function openProjectDetail(i){
   openOverlay('proj-detail-overlay');
 }
 
-function openContact(){ openOverlay('contact-overlay'); }
-function openOpenSource(){ openOverlay('opensource-overlay'); }
+function openContact(){ track('folder-contact'); openOverlay('contact-overlay'); }
+function openOpenSource(){ track('folder-opensource'); openOverlay('opensource-overlay'); }
 
 function openFullBio() {
+  track('bio-full');
   closeOverlay('folder-overlay');
   document.getElementById('bio-name').textContent = FULL_BIO.name;
   document.getElementById('bio-p1').textContent   = FULL_BIO.bio1;
@@ -1215,7 +1286,7 @@ function renderListView(){
     </div>
 
     <h1 class="lv-name">Tanishk Gangwar</h1>
-    <p class="lv-oneliner">3rd-year CSE (Data Science) student doing empirical software engineering research — causal inference on 638k+ commits, Raft consensus in Go, and 4 merged OSS PRs across pandas, PyDriller, and PyGithub.</p>
+    <p class="lv-oneliner">3rd-year CSE (Data Science) student doing empirical software engineering research - causal inference on 638k+ commits, Raft consensus in Go, and 4 merged OSS PRs across pandas, PyDriller, and PyGithub.</p>
     <div class="lv-cta-row">
       <a class="modal-action" href="TanishkGangwar_resume.pdf" download="TanishkGangwar_Resume.pdf">Download resume</a>
       <a class="github-btn" href="https://github.com/tanistheta" target="_blank" rel="noopener">GitHub</a>
@@ -1238,7 +1309,7 @@ function renderListView(){
         <a href="https://github.com/PyGithub/PyGithub/pull/3540" target="_blank" rel="noopener">PyGithub #3540</a> (configurable rate-limit retry cap),
         <a href="https://github.com/ishepard/pydriller/pull/320" target="_blank" rel="noopener">PyDriller #320</a> (skip_whitespaces data-correctness fix), and
         <a href="https://github.com/ishepard/pydriller/pull/321" target="_blank" rel="noopener">PyDriller #321</a> (new Commit.patch public API).
-        Plus a documented investigation of <a href="https://github.com/ishepard/pydriller/issues/283" target="_blank" rel="noopener">PyDriller #283</a>, where the obvious fix was shown to only work due to a Windows-specific file-handle quirk — reported with evidence instead of shipped unsafely.</p>
+        Plus a documented investigation of <a href="https://github.com/ishepard/pydriller/issues/283" target="_blank" rel="noopener">PyDriller #283</a>, where the obvious fix was shown to only work due to a Windows-specific file-handle quirk - reported with evidence instead of shipped unsafely.</p>
     </div>
 
     <div class="lv-section">
@@ -1248,7 +1319,7 @@ function renderListView(){
 
     <div class="lv-section lv-plain">
       <div class="lv-section-title">Education</div>
-      <p><b>${EDUCATION.h}</b> — ${EDUCATION.p}</p>
+      <p><b>${EDUCATION.h}</b> - ${EDUCATION.p}</p>
     </div>
 
     <div class="lv-section lv-plain">
@@ -1263,6 +1334,7 @@ function renderListView(){
 
 let lvRendered = false;
 function openListView(){
+  track('listview-open');
   if(!lvRendered){ renderListView(); lvRendered = true; }
   document.getElementById('listview').classList.add('open');
   document.getElementById('listview').scrollTop = 0;
@@ -1271,10 +1343,8 @@ function closeListView(){
   document.getElementById('listview').classList.remove('open');
 }
 
-/* ?view=list opens the plain version directly — shareable with recruiters */
 if (new URLSearchParams(location.search).get('view') === 'list') { openListView(); }
 
-/* keep the Projects folder sub-label in sync with the array length */
 document.getElementById('projects-count').textContent =
   PROJECTS.length + (PROJECTS.length === 1 ? ' item' : ' items');
 
@@ -1300,7 +1370,7 @@ buildGrid();
 </div>
 
 <script>
-/* iframe loads lazily on first click — no auto-expand on page load */
+/* iframe loads lazily on first click - no auto-expand on page load */
 let spotifyLoaded = false;
 function toggleSpotify() {
   const embed = document.getElementById('spotify-embed');
@@ -1473,8 +1543,35 @@ document.querySelectorAll('.dock-item').forEach(d => {
 <div class="psst">psst - try moving the icons and letters 👀</div>
 
 <script>
-/* psst hint fades after 8s — runs after the element exists in the DOM */
 setTimeout(() => { const p = document.querySelector('.psst'); if(p) p.classList.add('fade'); }, 8000);
+</script>
+
+<script>
+(function(){
+  const fine    = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const wide    = !window.matchMedia('(max-width: 820px)').matches;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!fine || !wide || reduced) return;
+
+  const PAW_SVG = `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse class="paw-fill" cx="20" cy="27" rx="9.5" ry="7.5"/>
+    <ellipse class="paw-fill" cx="7.5" cy="17" rx="3.6" ry="4.6" transform="rotate(-22 7.5 17)"/>
+    <ellipse class="paw-fill" cx="15" cy="10.5" rx="3.8" ry="5"/>
+    <ellipse class="paw-fill" cx="25" cy="10.5" rx="3.8" ry="5"/>
+    <ellipse class="paw-fill" cx="32.5" cy="17" rx="3.6" ry="4.6" transform="rotate(22 32.5 17)"/>
+  </svg>`;
+
+  document.addEventListener('pointerdown', e => {
+    const p = document.createElement('div');
+    p.className = 'paw-print';
+    p.style.left = (e.clientX - 11) + 'px';
+    p.style.top  = (e.clientY - 11) + 'px';
+    p.style.setProperty('--pr', (Math.random()*44 - 22).toFixed(0) + 'deg');
+    p.innerHTML = PAW_SVG;
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 650);
+  }, {passive:true});
+})();
 </script>
 
 <script data-goatcounter="https://tanistheta.goatcounter.com/count"
