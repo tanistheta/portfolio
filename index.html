@@ -1366,11 +1366,10 @@ buildGrid();
       <div class="spotify-winbtn expand"></div>
     </div>
   </div>
-  <div class="spotify-embed collapsed" id="spotify-embed"></div>
+  <div class="spotify-embed" id="spotify-embed"></div>
 </div>
 
 <script>
-/* iframe loads lazily on first click - no auto-expand on page load */
 let spotifyLoaded = false;
 function toggleSpotify() {
   const embed = document.getElementById('spotify-embed');
@@ -1384,6 +1383,8 @@ function toggleSpotify() {
   }
   embed.classList.toggle('collapsed');
 }
+// load it immediately on page load instead of waiting for a click
+toggleSpotify();
 </script>
 
 <!-- full bio overlay -->
