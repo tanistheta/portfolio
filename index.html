@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tanishk Gangwar - Tanistheta</title>
-<meta name="description" content="Tanishk Gangwar - CSE (Data Science) student building empirical software engineering research. Sekivara, Ikiru, raft-kv, and 4 merged OSS PRs across pandas, PyDriller, and PyGithub.">
+<meta name="description" content="Tanishk Gangwar - CSE (Data Science) student building empirical software engineering research. Sekivara, Ikiru, a live Raft cluster in Go, and 5 OSS PRs (3 merged) across pandas, PyDriller, PyGithub, and npm/cli.">
 <meta name="theme-color" content="#1e1e1e">
 <meta property="og:title" content="Tanishk Gangwar - Tanistheta">
-<meta property="og:description" content="Portfolio. Causal inference on AI's behavioral fingerprint in open source, Raft consensus in Go, and merged contributions to pandas, PyDriller, and PyGithub.">
+<meta property="og:description" content="Portfolio. Causal inference on AI's behavioral fingerprint in open source, a live chaos-tested Raft cluster in Go, and OSS contributions to pandas, PyDriller, PyGithub, and npm/cli.">
 <meta property="og:type" content="website">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta property="og:url" content="https://tanishkgangwar.vercel.app">
 <meta property="og:image" content="https://tanishkgangwar.vercel.app/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Tanishk Gangwar - Tanistheta">
-<meta name="twitter:description" content="Causal inference on AI's behavioral fingerprint in open source, Raft consensus in Go, and merged contributions to pandas, PyDriller, and PyGithub.">
+<meta name="twitter:description" content="Causal inference on AI's behavioral fingerprint in open source, a live chaos-tested Raft cluster in Go, and OSS contributions to pandas, PyDriller, PyGithub, and npm/cli.">
 <meta name="twitter:image" content="https://tanishkgangwar.vercel.app/og.png">
 <link rel="preload" as="image" href="wallpaper.jpeg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -359,6 +359,7 @@
   .oss-item-repo { font-size:10px; color:var(--muted); letter-spacing:.05em; text-transform:uppercase; font-weight:700; display:block; margin-bottom:3px; }
   .oss-pill { font-size:9px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; padding:3px 8px; border-radius:2px; flex-shrink:0; white-space:nowrap; }
   .oss-pill.merged { background:#2da44e; color:#fff; }
+  .oss-pill.review { background:#0969da; color:#fff; }
   .oss-pill.reported { background:#9a6700; color:#fff; }
   .oss-item p { font-size:12px; line-height:1.8; color:#444; margin-bottom:0; }
   .oss-item p a { color: var(--blue2); text-decoration:none; font-weight:700; }
@@ -461,7 +462,7 @@
 <noscript>
   <div style="max-width:680px;margin:40px auto;padding:0 20px;font-family:monospace;line-height:1.8;">
     <h1>Tanishk Gangwar (tanistheta)</h1>
-    <p>CSE (Data Science) undergraduate at Manipal University Jaipur (CGPA 9.00/10) doing empirical software engineering research: causal inference on GitHub Copilot's behavioral fingerprint (Sekivara, 638,000+ commits), a staggered-adoption DiD study of CODEOWNERS (Ikiru, ~21TB via BigQuery), and Raft consensus in Go with deterministic simulation testing (raft-kv). Four merged OSS pull requests across pandas, PyDriller, and PyGithub.</p>
+    <p>CSE (Data Science) undergraduate at Manipal University Jaipur (CGPA 9.00/10) doing empirical software engineering research: causal inference on GitHub Copilot's behavioral fingerprint (Sekivara, 638,000+ commits, written up as an MSR-format paper), a staggered-adoption DiD study of CODEOWNERS (Ikiru, ~21TB via BigQuery), and a from-scratch Raft consensus implementation in Go with deterministic simulation testing, deployed as a live chaos-testable 3-node cluster (raft-kv). Five OSS pull requests - three merged (pandas, PyDriller x2), two in review (PyGithub, npm/cli).</p>
     <p>GitHub: <a href="https://github.com/tanistheta">github.com/tanistheta</a> · LinkedIn: <a href="https://www.linkedin.com/in/tanishk-gangwar-809614363/">linkedin.com/in/tanishk-gangwar</a> · Email: <a href="mailto:tanishk7531@gmail.com">tanishk7531@gmail.com</a> · <a href="TanishkGangwar_resume.pdf">Resume (PDF)</a></p>
     <p>This site is interactive and needs JavaScript - enable it for the full desktop experience.</p>
   </div>
@@ -510,7 +511,7 @@
 
   <div class="folder" style="top:55%; right:31%" tabindex="0" role="button" aria-label="Open Source" onclick="openOpenSource()">
     <svg viewBox="0 0 56 48" fill="none" aria-hidden="true"><rect x="0" y="10" width="56" height="36" rx="3" fill="#9ED6C8"/><path d="M0 15C0 12.2 2.2 10 5 10H22L27 5H52C54.8 5 56 7.2 56 10V15H0Z" fill="#7CBBAC"/><text x="28" y="36" text-anchor="middle" fill="white" font-size="14" opacity=".85" font-family="monospace">git</text></svg>
-    <span class="folder-label">Open Source</span><span class="folder-sub">4 merged PRs</span>
+    <span class="folder-label">Open Source</span><span class="folder-sub">3 merged · 2 in review</span>
   </div>
 
   <!-- captcha -->
@@ -703,18 +704,19 @@
 <div class="overlay" id="opensource-overlay" onclick="closeOverlay('opensource-overlay',event)">
   <div class="modal oss-modal" role="dialog" aria-modal="true" aria-label="Open Source Contributions" onclick="event.stopPropagation()">
     <div class="modal-bar">
-      <span class="modal-bar-title">Open Source - Merged Contributions</span>
+      <span class="modal-bar-title">Open Source - Contributions</span>
       <button class="modal-x" aria-label="Close" onclick="closeOverlay('opensource-overlay')">✕</button>
     </div>
     <div class="modal-body">
       <div class="oss-head">
         <h3>Open Source Contributions</h3>
         <div class="oss-stat-row">
-          <span class="oss-stat">4 merged PRs</span>
-          <span class="oss-stat">pandas · PyDriller · PyGithub</span>
+          <span class="oss-stat">3 merged PRs</span>
+          <span class="oss-stat">2 in review</span>
+          <span class="oss-stat">pandas · PyDriller · PyGithub · npm/cli</span>
           <span class="oss-stat">every PR ships with tests</span>
         </div>
-        <p>Four merged pull requests across three widely-used Python libraries, plus a documented investigation of a maintainer-flagged open bug.</p>
+        <p>Three merged pull requests across widely-used Python libraries, two more under review (PyGithub and npm's own CLI), plus a documented investigation of a maintainer-flagged open bug.</p>
       </div>
 
       <div class="oss-item">
@@ -728,20 +730,6 @@
         <p>
           <a href="https://github.com/pandas-dev/pandas/pull/66101" target="_blank" rel="noopener">PR #66101</a> -
           fixed an indexing bug where negative-slice indexers produced incorrect results, in the most widely-used data library in the Python ecosystem. Shipped with a regression test following the project's contribution and testing conventions.
-        </p>
-      </div>
-
-      <div class="oss-item">
-        <div class="oss-item-top">
-          <div>
-            <span class="oss-item-repo">PyGithub - PyGithub/PyGithub</span>
-            <span class="oss-item-title">Configurable rate-limit retry cap</span>
-          </div>
-          <span class="oss-pill merged">Merged</span>
-        </div>
-        <p>
-          <a href="https://github.com/PyGithub/PyGithub/pull/3540" target="_blank" rel="noopener">PR #3540</a> -
-          added a configurable cap on rate-limit retries, so long-running GitHub API jobs (like repository-mining pipelines) can fail fast instead of blocking indefinitely when they hit the API rate limit.
         </p>
       </div>
 
@@ -772,6 +760,34 @@
           <a href="https://github.com/ishepard/pydriller/pull/321" target="_blank" rel="noopener">PR #321</a>
           (closing <a href="https://github.com/ishepard/pydriller/issues/226" target="_blank" rel="noopener">#226</a>) -
           added <code>Commit.patch</code>, returning the full unified diff of a commit, closing a two-year-old feature request. Rather than reconstructing git's patch-header format manually, delegated directly to git itself, then stress-tested the implementation against root commits, normal commits, and merge commits before writing a single line into the main codebase.
+        </p>
+      </div>
+
+      <div class="oss-item">
+        <div class="oss-item-top">
+          <div>
+            <span class="oss-item-repo">npm - npm/cli</span>
+            <span class="oss-item-title">Fixed npm audit fix failing silently</span>
+          </div>
+          <span class="oss-pill review">In review</span>
+        </div>
+        <p>
+          <a href="https://github.com/npm/cli/pull/9754" target="_blank" rel="noopener">PR #9754</a> -
+          addressed a case where <code>npm audit fix</code> could fail silently instead of applying a security fix, by introducing a <code>securityDowngrade</code> gate in <code>CanPlaceDep</code>, the dependency-placement logic at the core of npm's tree resolution.
+        </p>
+      </div>
+
+      <div class="oss-item">
+        <div class="oss-item-top">
+          <div>
+            <span class="oss-item-repo">PyGithub - PyGithub/PyGithub</span>
+            <span class="oss-item-title">Configurable rate-limit retry cap</span>
+          </div>
+          <span class="oss-pill review">In review</span>
+        </div>
+        <p>
+          <a href="https://github.com/PyGithub/PyGithub/pull/3540" target="_blank" rel="noopener">PR #3540</a> -
+          added a configurable cap on rate-limit retries, so long-running GitHub API jobs (like repository-mining pipelines) can fail fast instead of blocking indefinitely when they hit the API rate limit.
         </p>
       </div>
 
@@ -852,12 +868,12 @@ const PROJECTS = [
     image:   null,
     imageAlt: "",
     lang:    "Go",
-    meta:    "Raft consensus · deterministic simulation testing",
-    finding: "Key result: consensus bugs replay byte-for-byte from a single seed",
-    desc:    "A from-scratch implementation of the Raft consensus protocol in Go, built around deterministic simulation testing: a virtual-time scheduler owns all message delivery, timers, and randomness, so any failing test - leader-election races, split votes, injected faults - reproduces identically from a seed. The approach has already paid for itself: it surfaced and fixed two latent correctness bugs (a node granting a vote without resetting its election timer, and a candidate ignoring a same-term leader's heartbeat) plus a split-vote livelock caused by a degenerate RNG stub. Scheduler-driven fault injection is in - drop, delay, and network partitions - with six deterministic scenarios passing, including partition majority/minority and lossy-network cases; real log replication (AppendEntries) is the next milestone.",
-    tags:    ["Go", "Distributed Systems", "Raft", "Deterministic Simulation Testing"],
+    meta:    "Raft consensus · DST · live 3-node cluster on Azure",
+    finding: "Key result: 2,000-seed simulation sweep - 112 stale reads caught, 0 linearizability violations",
+    desc:    "A from-scratch implementation of the Raft consensus protocol in Go, now running as a live, chaos-testable 3-node cluster. Correctness came first: a deterministic simulation framework - a virtual-time scheduler owning all message delivery, timers, and randomness - replays any failure byte-for-byte from a single seed. A 2,000-seed sweep surfaced 112 stale minority reads and zero linearizability violations, and the implementation was externally validated against Maelstrom/Jepsen workloads. On top of the core sit full AppendEntries log replication with a KV state machine, write-ahead-log persistence, gRPC transport, and a client API with automatic leader forwarding. The deployed cluster runs on an Azure VM behind HTTPS with a live dashboard showing node state, term, commit index, and real KV traffic - plus chaos controls to kill, isolate, and heal nodes. Leader crashes, network partitions, and split-brain recovery have all been verified live, including toxiproxy-driven partitions in Docker Compose.",
+    tags:    ["Go", "Distributed Systems", "Raft", "Deterministic Simulation Testing", "gRPC", "Docker", "Azure"],
     github:  "https://github.com/tanistheta/raft-kv",
-    live:    null,
+    live:    "https://raftkv.duckdns.org/",
     links:   [],
   },
   {
@@ -865,9 +881,9 @@ const PROJECTS = [
     image:   "figures/sekivara-event-study.png",
     imageAlt: "Event study plot showing commit size shift after Copilot adoption",
     lang:    "Python",
-    meta:    "10 repos · 638k+ commits · causal inference",
+    meta:    "10 repos · 638k+ commits · causal inference · MSR-format paper",
     finding: "Key finding: Copilot adoption → smaller, more atomic commits",
-    desc:    "A quasi-experimental difference-in-differences study asking whether GitHub Copilot left a measurable behavioral fingerprint in open-source development. Analyzed 638,000+ commits across 10 major repositories - including llvm-project - with HC3 robust standard errors, an event-study design, and a formal joint pre-trend F-test that passed cleanly on all four headline features. Treated repos shifted significantly toward smaller, more atomic commits post-Copilot, and the effect was driven by existing contributors changing how they work, not by an influx of new ones. Full methodology and robustness checks are in the repository README.",
+    desc:    "A quasi-experimental difference-in-differences study asking whether GitHub Copilot left a measurable behavioral fingerprint in open-source development. Analyzed 638,000+ commits across 10 major repositories - including llvm-project - with HC3 robust standard errors, an event-study design, and a formal joint pre-trend F-test that passed cleanly on all four headline features. Treated repos shifted significantly toward smaller, more atomic commits post-Copilot, with both returning and new contributors moving in the same direction. A commit-message-level DiD adds triangulation: the share of fix commits fell and the share of refactor commits rose, both clearing the same formal pre-trend standard. The results are written up as an 8-page MSR-format paper (ACM sigconf) with explicit research questions, threats to validity, and full pipeline reproducibility verified against raw data - targeting MSR 2027.",
     tags:    ["Python", "Causal Inference", "DiD", "MSR", "statsmodels"],
     github:  "https://github.com/tanistheta/sekivara",
     live:    null,
@@ -932,32 +948,46 @@ const PROJECTS = [
     live:    null,
     links:   [],
   },
+  {
+    name:    "NTPC Field Tools",
+    image:   null,
+    imageAlt: "",
+    lang:    "JS + Py",
+    meta:    "built at NTPC · offline-first · no pip, no admin rights",
+    finding: "Key constraint: locked-down office desktops - everything runs with zero installs",
+    desc:    "Two data tools built during vocational training on NTPC's Advanced Pattern Recognition team, both designed around a hard constraint: office desktops with no pip, no admin rights, and no installs allowed. The first is a fully offline, browser-based CSV/Excel converter - SheetJS and JSZip bundled inline into a single self-contained HTML file - with batch folder processing, pre-flight validation, and a diff-by-example editor for cleaning tag names (plus character-strip and multi-position removal). The second is an automated outlier-removal and graph-rejection pipeline for Pearson correlation analysis, using a two-stage design: graph-level gap and leverage tests on raw data, followed by point-level MAD cleaning, with IQR as a cross-check - shipped with a PDF methodology summary.",
+    tags:    ["JavaScript", "SheetJS", "Python", "Robust Statistics", "MAD / IQR"],
+    github:  null,
+    live:    null,
+    links:   [],
+  },
 ];
 
 const HIGHLIGHTS = [
   { b: "Amazon ML Summer School", t: "selected - top ~2.2% of 134,421+ applicants" },
   { b: "Google - The Big Code", t: "Top 1,500" },
-  { b: "NTPC Limited", t: "Vocational Trainee, Advanced Pattern Recognition team" },
-  { b: "Open source", t: "4 merged PRs across pandas, PyDriller, and PyGithub" },
+  { b: "Dean's Academic Excellence Award", t: "Semesters 2, 3 & 4 - Manipal University Jaipur" },
+  { b: "NTPC Limited", t: "Vocational Trainee, Advanced Pattern Recognition team (completed Jul 2026)" },
+  { b: "Open source", t: "3 merged PRs (pandas, PyDriller) + 2 in review (PyGithub, npm/cli)" },
 ];
 
 const ABOUT = {
   h: "Hey, I'm Tanishk.",
-  p: "3rd-year CSE (Data Science) student who treats Git history as a dataset. I do empirical software engineering research - causal inference, information theory, and the question of what code actually tells us about the people writing it. Currently a vocational trainee on NTPC's Advanced Pattern Recognition team.",
+  p: "3rd-year CSE (Data Science) student who treats Git history as a dataset. I do empirical software engineering research - causal inference, information theory, and the question of what code actually tells us about the people writing it. Recently completed vocational training on NTPC's Advanced Pattern Recognition team, building offline data tools for locked-down office machines.",
   tags: ["Empirical SE", "Causal Inference", "Distributed Systems", "Python", "Go", "C++"],
 };
 
 const EDUCATION = {
   h: "Manipal University Jaipur",
-  p: "B.Tech in Computer Science & Engineering (Data Science), 2024–2028. CGPA 9.00/10. Currently working on research at the intersection of causal inference and mining software repositories.",
-  tags: ["B.Tech CSE (DS)", "2024–2028", "CGPA 9.00", "Jaipur"],
+  p: "B.Tech in Computer Science & Engineering (Data Science), 2024–2028. CGPA 9.00/10. Dean's Academic Excellence Award in Semesters 2, 3, and 4. Currently working on research at the intersection of causal inference and mining software repositories.",
+  tags: ["B.Tech CSE (DS)", "2024–2028", "CGPA 9.00", "Dean's Award x3", "Jaipur"],
 };
 
 const FULL_BIO = {
   name:   "Tanishk Gangwar",
   photo:  "photo.jpeg",
   bio1:   "I grew up across multiple cities, which taught me early on how to adapt, observe, and find patterns in unfamiliar places. Tech drew me in for the same reason - it sits at the intersection of logic and creativity, where a well-designed solution can be as elegant as anything artistic.",
-  bio2:   "Right now I'm focused on empirical software engineering research - causal inference on Copilot's behavioral fingerprint across 638k+ commits, a staggered-adoption study of CODEOWNERS on ~21TB of GH Archive data - plus building Raft consensus in Go with deterministic simulation testing. Along the way: selection into the Amazon ML Summer School (top ~2.2% of 134,421+ applicants), Top 1,500 in Google's The Big Code, and a vocational trainee role on NTPC's Advanced Pattern Recognition team. Long-term, I'm aiming at venues like MSR.",
+  bio2:   "Right now I'm focused on empirical software engineering research - causal inference on Copilot's behavioral fingerprint across 638k+ commits, now written up as an MSR-format paper targeting MSR 2027, and a staggered-adoption study of CODEOWNERS on ~21TB of GH Archive data - plus a from-scratch Raft cluster in Go, chaos-tested with deterministic simulation and deployed live on Azure. Along the way: selection into the Amazon ML Summer School (top ~2.2% of 134,421+ applicants), Top 1,500 in Google's The Big Code, Dean's Academic Excellence Awards in three consecutive semesters, and a completed vocational traineeship on NTPC's Advanced Pattern Recognition team. Long-term, I'm aiming at venues like MSR.",
   github: "https://github.com/tanistheta",
   linkedin: "https://www.linkedin.com/in/tanishk-gangwar-809614363/",
   email:  "tanishk7531@gmail.com",
@@ -969,8 +999,8 @@ const SKILLS = {
   groups: [
     { name: "Languages",        items: ["Python", "Go", "C++", "SQL"] },
     { name: "ML / Research",    items: ["CLIP", "UMAP", "scikit-learn", "pandas", "statsmodels", "Difference-in-Differences", "Cross-validation"] },
-    { name: "Systems",          items: ["Raft Consensus", "Deterministic Simulation Testing", "Concurrency"] },
-    { name: "Infra & Deployment", items: ["FastAPI", "Docker", "Google Cloud Platform", "BigQuery", "Linux", "Git"] },
+    { name: "Systems",          items: ["Raft Consensus", "Deterministic Simulation Testing", "gRPC", "Concurrency"] },
+    { name: "Infra & Deployment", items: ["FastAPI", "Docker", "Google Cloud Platform", "Azure", "BigQuery", "Linux", "Git"] },
     { name: "Core CS",          items: ["DSA", "STL", "Algorithms"] },
     { name: "Currently",        items: ["Causal Inference", "Mining Software Repositories", "Distributed Systems"] },
   ],
@@ -980,12 +1010,13 @@ const FACTS = [
   { emoji:"📊", text:"638,000+ commits were analyzed for Sekivara - including llvm-project. You just clicked through faster than any of them merged." },
   { emoji:"🎲", text:"AUC 0.47 - worse than a coin flip. That number is on this site on purpose. Honest validation beats an impressive claim." },
   { emoji:"📈", text:"Spearman r = 0.817. Delete the hypothesis, keep the data, and sometimes a real finding is hiding underneath." },
-  { emoji:"🤖", text:"Copilot's fingerprint in open source: existing contributors started making smaller, more atomic commits. New devs didn't cause it." },
+  { emoji:"🤖", text:"Copilot's fingerprint in open source: both returning and new contributors shifted toward smaller, more atomic commits." },
   { emoji:"🕰️", text:"171,881 commits across Flask, Django, and CPython - 15+ years of developer behavior, read like a dataset." },
   { emoji:"🧮", text:"Shannon defined entropy in 1948. Git shipped in 2005. Pointing one at the other is the whole project." },
   { emoji:"☁️", text:"Kansei runs two Dockerized services on a free-tier GCP VM with 964MB of RAM - on purpose, not by budget." },
   { emoji:"🗂️", text:"Ikiru pulled ~21TB through BigQuery to test one governance file. The answer through 18 months: it doesn't move review speed." },
   { emoji:"⚡", text:"raft-kv replays any consensus bug byte-for-byte from a single seed. Heisenbugs hate this one trick: deterministic simulation." },
+  { emoji:"🛰️", text:"raft-kv is live: a 3-node cluster on Azure with a dashboard that lets you kill the leader. It re-elects and keeps serving." },
 ];
 
 function track(name){
@@ -1001,8 +1032,9 @@ tick(); setInterval(tick, 1000);
   const ACH = [
     '<b>top 2.2%</b> · Amazon ML Summer School',
     '<b>top 1,500</b> · Google, The Big Code',
-    '<b>4 merged PRs</b> · pandas / PyDriller / PyGithub',
+    '<b>3 merged PRs</b> · pandas / PyDriller · +2 in review',
     '<b>638K+ commits</b> analyzed · Sekivara',
+    '<b>live Raft cluster</b> · raftkv.duckdns.org',
   ];
   const el = document.getElementById('taskbar-ach');
   if(!el) return;
@@ -1221,7 +1253,14 @@ function openProjectDetail(i){
   document.getElementById('pd-tags').innerHTML = p.tags.map(t => `<span class="proj-tag">${t}</span>`).join('');
   document.getElementById('pd-proof').innerHTML = (p.links || []).map(l =>
     `<a class="proof-link" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
-  document.getElementById('pd-ghbtn').href = p.github;
+
+  const ghBtn = document.getElementById('pd-ghbtn');
+  if (p.github) {
+    ghBtn.href = p.github;
+    ghBtn.style.display = 'inline-flex';
+  } else {
+    ghBtn.style.display = 'none';
+  }
 
   const liveBtn = document.getElementById('pd-livebtn');
   if (p.live) {
@@ -1259,7 +1298,7 @@ function renderListView(){
   const inner = document.getElementById('lv-inner');
   const projects = PROJECTS.map(p => {
     const links = [
-      `<a href="${p.github}" target="_blank" rel="noopener">GitHub ↗</a>`,
+      ...(p.github ? [`<a href="${p.github}" target="_blank" rel="noopener">GitHub ↗</a>`] : []),
       ...(p.live ? [`<a href="${p.live}" target="_blank" rel="noopener">Live demo ↗</a>`] : []),
       ...((p.links || []).map(l => `<a href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`)),
     ].join('');
@@ -1286,7 +1325,7 @@ function renderListView(){
     </div>
 
     <h1 class="lv-name">Tanishk Gangwar</h1>
-    <p class="lv-oneliner">3rd-year CSE (Data Science) student doing empirical software engineering research - causal inference on 638k+ commits, Raft consensus in Go, and 4 merged OSS PRs across pandas, PyDriller, and PyGithub.</p>
+    <p class="lv-oneliner">3rd-year CSE (Data Science) student doing empirical software engineering research - causal inference on 638k+ commits, a live chaos-tested Raft cluster in Go, and 5 OSS PRs (3 merged) across pandas, PyDriller, PyGithub, and npm/cli.</p>
     <div class="lv-cta-row">
       <a class="modal-action" href="TanishkGangwar_resume.pdf" download="TanishkGangwar_Resume.pdf">Download resume</a>
       <a class="github-btn" href="https://github.com/tanistheta" target="_blank" rel="noopener">GitHub</a>
@@ -1304,11 +1343,13 @@ function renderListView(){
 
     <div class="lv-section lv-plain">
       <div class="lv-section-title">Open Source</div>
-      <p>Four merged pull requests, every one shipped with tests:
+      <p>Three merged pull requests, every one shipped with tests:
         <a href="https://github.com/pandas-dev/pandas/pull/66101" target="_blank" rel="noopener">pandas #66101</a> (negative-slice indexer bug fix),
-        <a href="https://github.com/PyGithub/PyGithub/pull/3540" target="_blank" rel="noopener">PyGithub #3540</a> (configurable rate-limit retry cap),
         <a href="https://github.com/ishepard/pydriller/pull/320" target="_blank" rel="noopener">PyDriller #320</a> (skip_whitespaces data-correctness fix), and
         <a href="https://github.com/ishepard/pydriller/pull/321" target="_blank" rel="noopener">PyDriller #321</a> (new Commit.patch public API).
+        Two more in review:
+        <a href="https://github.com/npm/cli/pull/9754" target="_blank" rel="noopener">npm/cli #9754</a> (npm audit fix silent-failure fix via a securityDowngrade gate in CanPlaceDep) and
+        <a href="https://github.com/PyGithub/PyGithub/pull/3540" target="_blank" rel="noopener">PyGithub #3540</a> (configurable rate-limit retry cap).
         Plus a documented investigation of <a href="https://github.com/ishepard/pydriller/issues/283" target="_blank" rel="noopener">PyDriller #283</a>, where the obvious fix was shown to only work due to a Windows-specific file-handle quirk - reported with evidence instead of shipped unsafely.</p>
     </div>
 
